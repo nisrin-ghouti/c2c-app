@@ -7,8 +7,8 @@
 
 ## CLOUD iOS BUILD (no local Mac) — Codemagic
 
-`c2c-app` is **not** a git repo / not on GitHub yet (unlike `c2c-admin` /
-`c2c-landing` under `nisrin-ghouti`). Codemagic needs a remote to clone.
+GitHub (private): https://github.com/SultanKh/c2c-app  
+(Admin/landing still live under `nisrin-ghouti`; transfer this repo later if needed.)
 
 Config checked in: `codemagic.yaml`
 
