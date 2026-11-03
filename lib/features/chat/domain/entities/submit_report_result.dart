@@ -1,0 +1,1 @@
+enum SubmitReportResult { ok, unknown }

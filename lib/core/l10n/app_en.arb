@@ -1,0 +1,1267 @@
+{
+  "@@locale": "en",
+  "appTitle": "C2C",
+  "@appTitle": {
+    "description": "Application name"
+  },
+  "languageSelectionTitle": "Choose your language",
+  "languageSelectionSubtitle": "You can change this later from Settings.",
+  "languageContinue": "Continue",
+  "welcomeTitle": "Welcome",
+  "welcomeSubtitle": "Your campus, connected.",
+  "tabSignup": "Sign up",
+  "tabLogin": "Log in",
+  "methodPassword": "Sign in with password",
+  "methodOtp": "Sign in with email code",
+  "fieldFirstName": "First name",
+  "fieldLastName": "Last name",
+  "fieldEmail": "Email",
+  "emailHint": "you@{domain}",
+  "@emailHint": {
+    "placeholders": {
+      "domain": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldPassword": "Password",
+  "fieldPasswordSignupHint": "Password (min. 8 characters)",
+  "fieldConfirmPassword": "Confirm password",
+  "buttonLogin": "Log in",
+  "buttonSendCode": "Send me a verification code",
+  "buttonCreateAccount": "Create account",
+  "linkForgotPassword": "Forgot password",
+  "domainNote": "Registration is only allowed with a {domain} email address.",
+  "@domainNote": {
+    "placeholders": {
+      "domain": {
+        "type": "String"
+      }
+    }
+  },
+  "errorDomainNotAllowed": "Only {domain} emails are allowed",
+  "@errorDomainNotAllowed": {
+    "placeholders": {
+      "domain": {
+        "type": "String"
+      }
+    }
+  },
+  "errorEnterEmail": "Enter your email",
+  "errorEnterFirstName": "Enter your first name",
+  "errorEnterLastName": "Enter your last name",
+  "errorEnterPassword": "Enter a password",
+  "errorPasswordTooShort": "Password must be at least 8 characters",
+  "errorPasswordsDontMatch": "Passwords do not match",
+  "errorInvalidCredentials": "Incorrect email or password",
+  "errorEmailNotConfirmedSendingCode": "Please verify your email before logging in. Sending a code…",
+  "errorUserAlreadyExists": "An account with this email already exists — try logging in",
+  "errorUserNotFound": "No account found with this email — sign up first",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "verifyTitle": "Verify your email",
+  "verifySubtitle": "We sent a 6-digit code to your email address. Enter it below to continue.",
+  "otpHint": "000000",
+  "errorInvalidOtp": "Enter the 6-digit code",
+  "errorOtpIncorrect": "The code is incorrect or has expired.",
+  "errorBlockedUser": "This account has been blocked by C2C management due to a violation of the Terms of Use.",
+  "actionClose": "Close",
+  "buttonVerify": "Verify & continue",
+  "linkResend": "Didn't get a code? Resend",
+  "linkResendIn": "Resend available in {seconds}s",
+  "@linkResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "infoResent": "A new code was sent to your email.",
+  "linkBackToLogin": "Back to login",
+  "forgotTitle": "Password recovery",
+  "forgotSubtitle": "We'll send a reset link to your email.",
+  "buttonSendResetLink": "Send reset link",
+  "infoResetLinkSent": "We've sent a password reset link to your email.",
+  "errorEnterUniversityEmail": "Enter a valid email address",
+  "resetTitle": "Reset password",
+  "fieldNewPasswordHint": "New password (min. 8 characters)",
+  "buttonUpdatePassword": "Update password",
+  "infoPasswordUpdated": "Password updated. Redirecting you to the app…",
+  "resetLinkInactive": "This reset link isn't active. Please request a new one from \"Forgot password\".",
+  "completeProfileTitle": "Complete your profile",
+  "completeProfileSubtitle": "Just a few details before you get started.",
+  "fieldFacultyOptional": "Faculty (optional)",
+  "fieldYearOptional": "Year (optional)",
+  "buttonContinue": "Continue",
+  "errorSaveProfileFailed": "Could not save your profile. Please try again.",
+  "policyTitle": "Policy & Terms of Use",
+  "policyVersionLabel": "Version {version}",
+  "@policyVersionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "policyNoneActive": "No active policy right now.",
+  "buttonAgree": "I agree to the terms",
+  "buttonAlreadyAgreed": "You already agreed",
+  "buttonContinueToApp": "Continue to the app",
+  "errorLoadPolicyFailed": "Could not load the policy.",
+  "errorAgreePolicyFailed": "Could not save your agreement. Please try again.",
+  "restrictedAccessTitle": "Access restricted",
+  "restrictedAccessMessage": "This app is for students only. Your account doesn't have student access.",
+  "homeSignedInAs": "Signed in as {email}",
+  "@homeSignedInAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "actionSignOut": "Sign out",
+  "homeGreeting": "Hello, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMyPoints": "My points",
+  "homeHeroTitle": "What's happening today on campus?",
+  "homeMonthlyChampions": "Champions of the month",
+  "coachMarkNavHomeTitle": "Home",
+  "coachMarkNavHomeDescription": "Your dashboard — events, notifications, and what's new.",
+  "coachMarkNavMatchesTitle": "Matches",
+  "coachMarkNavMatchesDescription": "Discover and connect with fellow students.",
+  "coachMarkNavScanTitle": "Scan",
+  "coachMarkNavScanDescription": "Scan a QR code to check in or earn points.",
+  "coachMarkNavBenefitsTitle": "Benefits",
+  "coachMarkNavBenefitsDescription": "Redeem your points for partner perks.",
+  "coachMarkNavProfileTitle": "Profile",
+  "coachMarkNavProfileDescription": "Edit your profile and manage settings.",
+  "coachMarkMyEventsTitle": "My Events",
+  "coachMarkMyEventsDescription": "See the events and meetings you've registered for.",
+  "coachMarkUpcomingEventsTitle": "Upcoming Events",
+  "coachMarkUpcomingEventsDescription": "Browse campus events happening soon.",
+  "coachMarkNotificationsTitle": "Select Multiple",
+  "coachMarkNotificationsDescription": "Long-press a notification to select multiple items and mark them as read, unread, or delete them together.",
+  "coachMarkChampionsTitle": "Monthly Champions",
+  "coachMarkChampionsDescription": "See this month's top point earners.",
+  "homeMyNotifications": "My notifications",
+  "homeUpcomingEvents": "All events",
+  "homeMyEventsCalendar": "My events calendar",
+  "homeNewStudents": "New students",
+  "homeSeeAll": "See all",
+  "actionSeeMore": "See more",
+  "homeCampusEvents": "Campus events",
+  "filterAll": "All",
+  "filtersTitle": "Filters",
+  "filtersClearAll": "Clear all",
+  "filtersApply": "Apply filters",
+  "comingSoon": "Coming soon",
+  "eventUpcomingTag": "Upcoming",
+  "eventRegisteredLabel": "Registered",
+  "eventAttendedLabel": "Attended",
+  "eventRegisterAction": "Register",
+  "eventPointsLabel": "+{points} pts",
+  "@eventPointsLabel": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "homeEmptyEvents": "No upcoming events right now.",
+  "homeEmptySurveys": "No surveys available right now.",
+  "homeEmptyStudents": "No new students right now.",
+  "homeLoadError": "Could not load the home page. Please try again.",
+  "registerSuccess": "You're registered!",
+  "registerErrorAlready": "You're already registered for this event",
+  "registerErrorFull": "This event is full",
+  "registerErrorEnded": "This event has already ended",
+  "registerErrorNotPublished": "This event isn't open for registration",
+  "registerErrorNotFound": "Event not found",
+  "registerErrorGeneric": "Couldn't register. Please try again.",
+  "deleteEventTitle": "Delete event",
+  "deleteEventMessage": "Are you sure you want to delete this event?",
+  "deleteEventConfirm": "Delete",
+  "actionCancel": "Cancel",
+  "deleteEventSuccess": "Event deleted.",
+  "deleteEventError": "Couldn't delete the event. Please try again.",
+  "registrantsTitle": "Registrants",
+  "registrantsEmpty": "No one has registered yet.",
+  "registrantAttended": "Attended",
+  "registrantRegisteredOnly": "Registered",
+  "navProfile": "Profile",
+  "navBenefits": "Benefits",
+  "navScanning": "Scan",
+  "navMatches": "Matches",
+  "navHome": "Home",
+  "matchesTitle": "Matches",
+  "matchesEmpty": "No other students yet.",
+  "matchesLoadError": "Couldn't load matches. Please try again.",
+  "matchesConnectAction": "Connect via QR",
+  "profileAboutLabel": "About",
+  "profileLanguagesLabel": "Languages",
+  "profileMessageAction": "Message",
+  "profileViewAction": "View profile",
+  "matchesSearchHint": "Search by name, hobby, or language...",
+  "matchesFilterToggle": "Filter",
+  "matchesSortToggle": "Sort",
+  "matchesSortHighToLow": "Compatibility: high to low",
+  "matchesSortLowToHigh": "Compatibility: low to high",
+  "matchesCompatibilityBadge": "{percent}% match",
+  "@matchesCompatibilityBadge": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "matchesResultsCount": "{count} student matches",
+  "matchesYearInline": "Year {year}",
+  "@matchesYearInline": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "matchesSendHelloAction": "Send Hello",
+  "@matchesResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterFacultyLabel": "Faculty",
+  "filterFieldOfStudyLabel": "Field of study",
+  "filterDegreeLabel": "Degree",
+  "filterYearLabel": "Year of study",
+  "filterLanguageLabel": "Language",
+  "filterGenderLabel": "Gender",
+  "scanningTitle": "Scanning & Points",
+  "scanTabLabel": "Scan / Enter code",
+  "scanCardTitle": "Your Student ID",
+  "scanCardSubtitle": "Show this to an event host if the QR code can't be scanned.",
+  "scanEventQrAction": "Scan event QR",
+  "scanEventCameraTitle": "Scan with your device camera",
+  "scanEventGenericSubtitle": "Point your camera at the QR code — it'll be detected automatically.",
+  "scanCameraPermissionHint": "If the camera doesn't open, allow camera access in your device settings.",
+  "scanAnotherAction": "Scan another",
+  "scanEventQrPickerTitle": "Which event?",
+  "scanEventQrEmpty": "Register for an event first to check in with its QR code.",
+  "scanEnterCodeLabel": "Enter code manually",
+  "scanEnterCodeAction": "Submit",
+  "scanEnterCodeError": "Enter a code first",
+  "pointsHistoryTitle": "Points history",
+  "pointsHistoryEmpty": "No points activity yet.",
+  "pointsHistoryLoadError": "Couldn't load points history.",
+  "howToEarnTitle": "How to earn points",
+  "howToEarnEvent": "Event participation (scan the event's code during the activity): +20 each",
+  "howToEarnFirstMeeting": "First meeting with a new student: +25 each",
+  "howToEarnSecondMeeting": "Second meeting with the same student: +20 each",
+  "howToEarnRepeatMeeting": "Third meeting onward with the same student: +10 each",
+  "reasonEventAttendance": "Event participation",
+  "reasonMeetingFirst": "First meeting",
+  "reasonMeetingSecond": "Second meeting",
+  "reasonMeetingRepeat": "Repeat meeting",
+  "reasonGroupMeeting": "Group meeting",
+  "reasonMonthlyPrize": "Monthly prize",
+  "reasonBenefitRedeem": "Benefit redeemed",
+  "reasonGeneric": "Points",
+  "championsTabLabel": "Monthly champions",
+  "championsTitle": "Monthly Champions",
+  "actionBack": "Back",
+  "actionNext": "Next",
+  "actionSkip": "Skip",
+  "actionGotIt": "Got it",
+  "championsHeroLabel": "This month's ranking",
+  "championsHeroTitle": "This month's champions",
+  "championsMyRankLabel": "My ranking",
+  "championsMyPointsLabel": "My points this month",
+  "championsGapLabel": "{gap} points to pass {name}",
+  "@championsGapLabel": {
+    "placeholders": {
+      "gap": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "championsUnranked": "You haven't earned any points this month yet.",
+  "championsListTitle": "This month's points",
+  "championsHeroMonthPrefix": "Champions",
+  "championsUpdateFrequency": "Updated monthly",
+  "championsTableRankCol": "Rank",
+  "championsTableNameCol": "Name",
+  "championsTablePointsCol": "Points",
+  "championsEmpty": "No ranking yet this month.",
+  "championsLoadError": "Couldn't load the leaderboard.",
+  "adminAccessDenied": "You don't have access to this page.",
+  "eventsTitle": "Events",
+  "eventTypeSingle": "One-Time",
+  "eventTypeProgram": "Program",
+  "eventFiltersButton": "Filters",
+  "eventFiltersTitle": "Filter events",
+  "eventFilterTypeLabel": "Type",
+  "eventFilterCategoryLabel": "Category",
+  "eventFilterOrganizerLabel": "Organizer",
+  "eventFiltersApply": "Apply filters",
+  "eventFiltersReset": "Reset",
+  "eventDescriptionLabel": "About this event",
+  "eventCancelAction": "Cancel registration",
+  "eventEndedLabel": "This event has ended",
+  "cancelEventRegistrationTitle": "Cancel registration?",
+  "cancelEventRegistrationMessage": "You can register again later if you change your mind.",
+  "cancelEventRegistrationConfirm": "Cancel registration",
+  "cancelEventRegistrationSuccess": "Registration cancelled.",
+  "cancelEventRegistrationError": "Couldn't cancel your registration.",
+  "myEventsTitle": "My Events",
+  "myEventsFilterUpcoming": "Upcoming",
+  "myEventsFilterAttended": "Attended",
+  "myEventsFilterMissed": "Missed",
+  "myEventsAttendedMessage": "Great job! We're proud that you joined!",
+  "myEventsMissedMessage": "We missed you! It's a shame you couldn't join us.",
+  "myEventsUpcomingMessage": "We're looking forward to seeing you!",
+  "myEventsEmpty": "You haven't registered for any events yet.",
+  "myEventsLoadError": "Couldn't load your events.",
+  "eventEditAction": "Edit",
+  "eventFormCreateTitle": "Create Event",
+  "eventFormEditTitle": "Edit Event",
+  "eventFormTitleLabel": "Title",
+  "eventFormDescriptionLabel": "Description",
+  "eventFormCategoryLabel": "Category",
+  "eventFormLocationLabel": "Location",
+  "eventFormStartLabel": "Starts",
+  "eventFormEndLabel": "Ends",
+  "eventFormPointsLabel": "Points",
+  "eventFormCapacityLabel": "Capacity (optional)",
+  "eventFormImageUrlLabel": "Image URL (optional)",
+  "eventFormOrganizerLabel": "Organizer name (optional)",
+  "eventFormVisibilityLabel": "Who can see this event?",
+  "eventVisibilityOnlyMe": "Only Me",
+  "eventVisibilityEveryone": "Everyone",
+  "eventVisibilitySpecificFaculties": "Specific Faculties",
+  "eventVisibilitySpecificGroups": "Specific Groups",
+  "eventFormFacultiesLabel": "Select faculties",
+  "eventFormGroupTagsLabel": "Group tags (comma separated)",
+  "eventFormErrorTitleRequired": "Enter a title",
+  "eventFormErrorDatesRequired": "Choose a start and end time",
+  "eventFormErrorEndBeforeStart": "End time must be after the start time",
+  "eventFormErrorGeneric": "Couldn't save the event. Please check the details and try again.",
+  "eventFormSubmitCreate": "Submit for Approval",
+  "eventFormSubmitUpdate": "Save Changes",
+  "eventShowQrAction": "Show QR",
+  "eventQrScanningLabel": "Scanning",
+  "eventQrRefreshesIn": "Refreshes in {seconds}s",
+  "@eventQrRefreshesIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "eventQrLoadError": "Couldn't generate a QR code.",
+  "eventQrHint": "Show this QR code to students during the event. It refreshes every 10 seconds.",
+  "eventScanningClosedMessage": "Scanning is closed.",
+  "eventScanTitle": "Scan to Check In",
+  "eventScanGenericHeading": "Scan any event's QR code to check in",
+  "eventScanToCheckInAction": "Scan to check in",
+  "eventScanSuccess": "You earned {points} points!",
+  "@eventScanSuccess": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "eventScanErrorExpired": "You scanned after the time limit.",
+  "eventScanErrorAlreadyScanned": "You have already scanned this event. You cannot scan it again.",
+  "eventScanErrorNotRegistered": "You need to register for this event before scanning.",
+  "eventScanErrorInvalid": "Invalid QR code.",
+  "eventStatsRegistered": "Registered",
+  "eventStatsAttended": "Attended",
+  "eventStatsMissed": "Missed",
+  "programPointsEquation": "{points} Points × {count} Sessions = {total} Possible Points",
+  "@programPointsEquation": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "programSessionsTitle": "Sessions",
+  "programSessionsEmpty": "No sessions yet.",
+  "programSessionsLoadError": "Couldn't load sessions.",
+  "programManageSessionsAction": "Manage Sessions",
+  "programViewSessionsAction": "View Sessions",
+  "programAttendanceProgress": "Attended {attended} of {total} sessions",
+  "@programAttendanceProgress": {
+    "placeholders": {
+      "attended": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "programAttendedAllSessions": "You attended every session!",
+  "programSessionsFormTitle": "Sessions",
+  "programSessionLabel": "Session",
+  "programAddSessionAction": "Add another session",
+  "eventFormErrorSessionsRequired": "Add at least one session",
+  "eventFormErrorSessionIncomplete": "Fill in the title and both times for every session",
+  "chatsTitle": "Chats",
+  "chatsEmpty": "No conversations yet.",
+  "chatsSearchHint": "Search chats",
+  "chatsSearchEmpty": "No chats match your search.",
+  "chatsLoadError": "Couldn't load your chats.",
+  "chatMessageHint": "Type a message…",
+  "chatBlockAction": "Block",
+  "chatUnblockAction": "Unblock",
+  "chatBlockedBanner": "You've blocked this user. Unblock to send messages.",
+  "chatBlockedByOtherBanner": "You can't send messages in this conversation.",
+  "chatBlockConfirmTitle": "Block this user?",
+  "chatBlockConfirmMessage": "They won't be able to message you until you unblock them.",
+  "chatEmptyThread": "Say hello 👋",
+  "chatDateToday": "Today",
+  "chatDateYesterday": "Yesterday",
+  "proposeMeetingTitle": "Propose a meeting",
+  "proposeMeetingPickDateTime": "Pick date & time",
+  "proposeMeetingPickEndDateTime": "Pick end time",
+  "proposeMeetingNotesLabel": "Notes (optional)",
+  "proposeMeetingSubmit": "Send proposal",
+  "proposeMeetingErrorDateRequired": "Choose a date and time",
+  "proposeMeetingErrorEndBeforeStart": "End time must be after the start time",
+  "proposeMeetingError": "Couldn't send the proposal",
+  "proposeMeetingErrorSameStudentToday": "You already have a meeting with this student on that day. You can meet the same student once per day.",
+  "proposeMeetingErrorDailyLimitSelf": "You already have meetings with 5 different students on that day, which is the daily limit. Try another date.",
+  "proposeMeetingErrorDailyLimitOther": "This student already has meetings with 5 different students on that day. Try another date.",
+  "proposeMeetingCardTitle": "Meeting proposal",
+  "proposeMeetingAccept": "Accept",
+  "proposeMeetingDecline": "Decline",
+  "proposeMeetingWaiting": "Waiting for response…",
+  "proposeMeetingAccepted": "Accepted",
+  "proposeMeetingDeclined": "Declined",
+  "reportUserAction": "Report",
+  "reportUserTitle": "Report {name}",
+  "@reportUserTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reportUserReasonLabel": "Reason",
+  "reportUserDetailsLabel": "Details",
+  "reportUserErrorReasonRequired": "Enter a reason",
+  "reportUserErrorDetailsRequired": "Enter some details",
+  "reportUserImagesLabel": "Screenshots (optional)",
+  "reportUserAddImage": "Add",
+  "reportUserSubmit": "Submit report",
+  "reportUserSuccess": "Report submitted.",
+  "reportUserError": "Couldn't submit the report.",
+  "groupMeetingListEntryPoint": "Group meetings",
+  "groupMeetingListTitle": "My Group Meetings",
+  "groupMeetingCreateAction": "New group meeting",
+  "groupMeetingListLoadError": "Couldn't load your group meetings.",
+  "groupMeetingListEmpty": "You have no group meetings yet.",
+  "groupMeetingStatusApproved": "Approved",
+  "groupMeetingStatusRejected": "Rejected",
+  "groupMeetingStatusPending": "Pending approval",
+  "groupMeetingRoleOrganizer": "You're organizing this meeting",
+  "groupMeetingRoleParticipant": "Organized by {name}",
+  "@groupMeetingRoleParticipant": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "groupMeetingFinishedTag": "Finished",
+  "groupMeetingShowQrAction": "Show QR",
+  "groupMeetingScanAction": "Scan",
+  "groupMeetingEnterCodeTitle": "Enter a code",
+  "groupMeetingEnterCodeHint": "Paste the code shared by the organizer",
+  "groupMeetingEnterCodeAction": "Enter code",
+  "groupMeetingCreateTitle": "New Group Meeting",
+  "groupMeetingCreateHint": "Your request goes to an admin for approval before a registration link is created.",
+  "groupMeetingLocationLabel": "Location",
+  "groupMeetingLocationHint": "Group meetings must take place on TAU campus.",
+  "groupMeetingLocationRequired": "Please choose a campus location.",
+  "groupMeetingMaxParticipantsLabel": "Max participants: {count}",
+  "@groupMeetingMaxParticipantsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMeetingCreateSubmit": "Submit request",
+  "groupMeetingCreateSuccess": "Your group meeting request was submitted.",
+  "groupMeetingCreateError": "Couldn't submit your request.",
+  "groupMeetingRegistrationTitle": "Group Meeting",
+  "groupMeetingRegistrationInvalid": "This link is invalid or has expired.",
+  "groupMeetingRegisteredCount": "{count} of {max} registered",
+  "@groupMeetingRegisteredCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMeetingRegisterAction": "Register",
+  "groupMeetingRegisterSuccess": "You're registered!",
+  "groupMeetingAlreadyRegistered": "You're already registered for this meeting.",
+  "groupMeetingRegisterErrorFull": "This meeting is full.",
+  "groupMeetingRegisterErrorAlready": "You're already registered.",
+  "groupMeetingRegisterErrorOwn": "You're the organizer of this meeting.",
+  "groupMeetingRegisterErrorGeneric": "Couldn't register for this meeting.",
+  "groupMeetingQrHint": "Show this QR code to participants. It refreshes every 10 seconds.",
+  "groupMeetingFinishAction": "Finish meeting",
+  "groupMeetingFinishError": "Couldn't finish the meeting.",
+  "groupMeetingFinishDialogTitle": "Meeting finished",
+  "groupMeetingFinishDialogOk": "OK",
+  "groupMeetingFinishOutcomeNone": "Nobody scanned in, so no points were awarded.",
+  "groupMeetingFinishOutcomeOneToOne": "Only one person scanned in, so this counted as a 1:1 meeting — you both earned {points} points.",
+  "@groupMeetingFinishOutcomeOneToOne": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMeetingFinishOutcomeCapped": "Only one person scanned in, so this counted as a 1:1 meeting — but today's cap for that pair was already reached, so no points were awarded.",
+  "groupMeetingFinishOutcomeGroup": "You earned {organizerPoints} points, and {scanners} participants each earned points.",
+  "@groupMeetingFinishOutcomeGroup": {
+    "placeholders": {
+      "organizerPoints": {
+        "type": "int"
+      },
+      "scanners": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMeetingScanTitle": "Scan to Join",
+  "groupMeetingScanSuccess": "You've joined the meeting!",
+  "groupMeetingScanErrorOwnCode": "You can't scan your own QR code.",
+  "benefitsCatalogTabLabel": "Catalog",
+  "benefitsWalletTabLabel": "My Wallet",
+  "benefitsPointsBalance": "You have {points} points",
+  "@benefitsPointsBalance": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "benefitsCatalogLoadError": "Couldn't load the benefits catalog.",
+  "benefitsCatalogEmpty": "No benefits available right now.",
+  "benefitsWalletLoadError": "Couldn't load your wallet.",
+  "benefitsWalletEmpty": "You haven't redeemed any benefits yet.",
+  "benefitsWalletTitle": "My Digital Wallet",
+  "benefitsWalletSubtitle": "All your digital cards in one place",
+  "benefitsWalletPointsLabel": "Points balance",
+  "benefitsWalletFilterAll": "All",
+  "benefitsWalletFilterNotUsed": "Not used",
+  "benefitsWalletFilterUsed": "Used",
+  "benefitsWalletFilterButton": "Filter",
+  "benefitsWalletFilterByBusiness": "Filter by business",
+  "benefitsWalletFilterClear": "Clear filter",
+  "benefitsStatusLabel": "My status",
+  "benefitsCatalogHeading": "Convert points to benefits",
+  "benefitsOpenWalletAction": "My Digital Wallet",
+  "benefitsCategoryAll": "All",
+  "benefitPointCost": "{points} points",
+  "@benefitPointCost": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "benefitRedeemAction": "Redeem",
+  "benefitNotEnoughPoints": "Not enough points",
+  "benefitAlreadyActiveLabel": "In your wallet",
+  "benefitAlreadyActiveMessage": "You have a digital card in your wallet for this benefit.",
+  "benefitRedeemConfirmTitle": "Redeem benefit",
+  "benefitRedeemConfirmMessage": "Redeem \"{title}\" for {points} points?",
+  "@benefitRedeemConfirmMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "benefitRedeemErrorInsufficientPoints": "You don't have enough points for this benefit.",
+  "benefitRedeemErrorUnavailable": "This benefit is no longer available.",
+  "benefitRedeemErrorAlreadyActive": "You already have a digital card in your wallet for this benefit.",
+  "benefitRedeemErrorNotAStudent": "This account can't redeem benefits — only student accounts can.",
+  "benefitRedeemErrorGeneric": "Couldn't redeem this benefit.",
+  "benefitCardRedeemedTag": "Redeemed",
+  "benefitCardAvailableTag": "Available",
+  "benefitCardStatusLabel": "Status",
+  "benefitCardOpenAction": "Digital Card",
+  "benefitCardShowHint": "Show this QR code to the partner to redeem.",
+  "benefitCardCodeLabel": "Or give this code if the QR can't be scanned",
+  "benefitCardAcquiredOn": "Redeemed with points on {date}",
+  "@benefitCardAcquiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "benefitCardRedeemedOn": "Used at partner on {date}",
+  "@benefitCardRedeemedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "supportContactsRowLabel": "Technical Support",
+  "supportContactsTitle": "Technical Support",
+  "supportContactsError": "Couldn't load support contacts.",
+  "supportContactsEmpty": "No support contacts have been set up yet.",
+  "supportContactsCopy": "Copy phone number",
+  "supportContactsCopied": "Phone number copied",
+  "benefitFormCreateTitle": "New Benefit",
+  "benefitFormEditTitle": "Edit Benefit",
+  "benefitFormPartnerLabel": "Partner business name",
+  "benefitFormImageUrlLabel": "Image URL",
+  "benefitFormPointCostLabel": "Point cost",
+  "benefitFormErrorPointCostInvalid": "Enter a point cost greater than 0",
+  "benefitFormCreateAction": "Create benefit",
+  "benefitFormSaveAction": "Save",
+  "benefitProfileAboutBenefit": "About this benefit",
+  "benefitProfileAboutBusiness": "About the business",
+  "benefitProfileHowToRedeem": "How to redeem",
+  "benefitProfileLinkLabel": "Link",
+  "benefitProfileOpenLink": "Open link",
+  "benefitProfileLocationLabel": "Location",
+  "benefitProfileOpenMaps": "Open in Maps",
+  "benefitProfileCategoryLabel": "Category",
+  "benefitProfileCostLabel": "Points cost",
+  "benefitFormSectionBasics": "Basic info",
+  "benefitFormSectionBusiness": "Business info",
+  "benefitFormSectionRedemption": "Redemption details",
+  "benefitFormSectionLocation": "Location",
+  "benefitFormBusinessDescriptionLabel": "Business description",
+  "benefitFormHowToRedeemLabel": "How to redeem",
+  "benefitFormExternalLinkLabel": "External link (Instagram, website, …)",
+  "benefitFormLocationLabel": "Location",
+  "benefitFormMapsLinkLabel": "Google Maps link",
+  "benefitFormImageLabel": "Benefit image",
+  "benefitFormEditAction": "Edit",
+  "benefitDigitalCardSection": "Digital card",
+  "benefitDigitalCardPreviewAction": "Preview digital card",
+  "benefitDigitalCardPreviewTitle": "Digital card preview",
+  "benefitDigitalCardPreviewNote": "This is exactly how the card will look in a student's wallet.",
+  "benefitCardSampleStudent": "Student name",
+  "benefitCardStudentLabel": "Cardholder",
+  "notificationEventPending": "\"{title}\" is waiting for your approval",
+  "@notificationEventPending": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventPendingGeneric": "An event is waiting for your approval",
+  "eventProfileOrganizerLabel": "Organizer",
+  "eventProfilePointsLabel": "Points awarded",
+  "eventProfileDescriptionLabel": "Event description",
+  "eventProfileLocationLabel": "Location",
+  "eventProfileScheduleLabel": "Date & time",
+  "eventProfileOrganizerDescriptionLabel": "About the organizer",
+  "eventProfileExternalLinkLabel": "External link",
+  "eventProfileCategoryLabel": "Category",
+  "eventProfileSessionsLabel": "Program sessions",
+  "eventProfileSessionColumn": "Session",
+  "eventProfileWhenColumn": "When",
+  "eventProfileWhereColumn": "Where",
+  "eventProfileStatusColumn": "Status",
+  "eventProfileSessionMissed": "Missed",
+  "eventProfileSessionUpcoming": "Upcoming",
+  "eventProfileTotalPoints": "{points} points for completing the program",
+  "@eventProfileTotalPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "eventProfileSessionCount": "{count} sessions",
+  "@eventProfileSessionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventProfilePerSessionPoints": "{points} points per session",
+  "@eventProfilePerSessionPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "eventProfileReviewTitle": "Review event",
+  "eventFormImageLabel": "Event image",
+  "notificationEventPublished": "New event: {title}",
+  "@notificationEventPublished": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventPublishedGeneric": "A new event was published",
+  "notificationBenefitPublished": "New benefit: {title}",
+  "@notificationBenefitPublished": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationBenefitPublishedGeneric": "A new benefit is available",
+  "notificationReportSubmitted": "A new report was submitted",
+  "notificationEventApproved": "\"{title}\" was approved",
+  "@notificationEventApproved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventApprovedGeneric": "Your event was approved",
+  "notificationEventRejected": "\"{title}\" was rejected",
+  "@notificationEventRejected": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventRejectedWithReason": "\"{title}\" was rejected: {reason}",
+  "@notificationEventRejectedWithReason": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventRejectedGeneric": "Your event was rejected",
+  "notificationGroupMeetingPending": "A group meeting is waiting for approval",
+  "notificationBenefitRedeemed": "Congratulations! The benefit ({title}) has been successfully redeemed.",
+  "@notificationBenefitRedeemed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationBenefitRedeemedGeneric": "Congratulations! Your benefit has been successfully redeemed.",
+  "notificationSurveyPublished": "New survey: {title}",
+  "@notificationSurveyPublished": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationSurveyPublishedGeneric": "A new survey is available",
+  "scanStudentIdLabel": "Student ID (Show it to the Event Host)",
+  "scanStudentIdCopied": "Student ID copied",
+  "attendanceManualTitle": "Confirm by Student ID",
+  "attendanceManualHint": "Enter the student's ID",
+  "attendanceManualAction": "Confirm attendance",
+  "attendanceManualLookupError": "No student found with that ID",
+  "attendanceManualConfirmTitle": "Confirm attendance",
+  "attendanceManualConfirmMessage": "Mark {name} as attended?",
+  "@attendanceManualConfirmMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attendanceManualSuccess": "{name} was marked as attended",
+  "@attendanceManualSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "optionNoTranslations": "No translations — shows in English",
+  "optionEditTranslations": "Edit translations",
+  "optionLabelArabic": "Arabic label",
+  "optionLabelHebrew": "Hebrew label",
+  "actionSave": "Save",
+  "championsRewardsTitle": "Monthly rewards",
+  "championsRewardFirst": "🥇 1st place: {points} pts",
+  "@championsRewardFirst": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "championsRewardSecond": "🥈 2nd place: {points} pts",
+  "@championsRewardSecond": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "championsRewardThird": "🥉 3rd place: {points} pts",
+  "@championsRewardThird": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "legalPrivacyTitle": "Privacy Policy",
+  "legalTermsTitle": "Terms & Conditions",
+  "legalEditAction": "Edit",
+  "legalTitleLabel": "Title",
+  "legalBodyLabel": "Content",
+  "legalLoadError": "Couldn't load this document.",
+  "legalSaveError": "Couldn't save. Please try again.",
+  "legalEditDenied": "Only the super admin can edit this.",
+  "legalEmpty": "This document hasn't been written yet.",
+  "profilePhotoRemove": "Remove photo",
+  "meetingInProgressTitle": "Meeting in progress",
+  "meetingWithLabel": "with",
+  "meetingYourQrTitle": "Your QR Code",
+  "meetingScanOtherTitle": "Scan the other student's QR code",
+  "meetingQrRotatingHint": "This code refreshes every 10 seconds",
+  "meetingSectionDone": "Done",
+  "meetingBothActionsHint": "Complete both actions to confirm the meeting and earn points.",
+  "meetingScanOwnCode": "That's your own code",
+  "meetingScanExpired": "That code expired — ask them to show it again",
+  "meetingScanError": "Couldn't scan. Please try again.",
+  "meetingCompletedPoints": "Meeting confirmed! You earned {points} points.",
+  "@meetingCompletedPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "meetingCompletedNoPoints": "Meeting confirmed! (No points — already met today.)",
+  "meetingOpenAction": "Open meeting",
+  "meetingNotYetOpen": "Ready to connect? Check back at your scheduled time.",
+  "meetingWindowEnded": "This meeting's window has ended",
+  "myEventsMeetingsTitle": "Meetings",
+  "meetingCardCompleted": "Completed",
+  "meetingAttendedMessage": "Awesome! We're glad you two connected.",
+  "meetingMissedMessage": "You missed this meeting window. No worries — you can schedule another one anytime.",
+  "meetingCardWith": "Meeting with {name}",
+  "@meetingCardWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordShow": "Show password",
+  "passwordHide": "Hide password",
+  "benefitFormSubmitError": "Couldn't save this benefit.",
+  "monthAnnouncementTitle": "{month} Champions",
+  "@monthAnnouncementTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "monthAnnouncementBody": "Last month's Champions have been announced! Here's the top 3:",
+  "monthAnnouncementOk": "OK",
+  "winnerBonusTitle": "You placed #{rank}!",
+  "@winnerBonusTitle": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "winnerBonusPoints": "You finished last month with {points} points.",
+  "@winnerBonusPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "winnerBonusAmount": "+{bonus} bonus points",
+  "@winnerBonusAmount": {
+    "placeholders": {
+      "bonus": {
+        "type": "int"
+      }
+    }
+  },
+  "winnerBonusOk": "Awesome!",
+  "accessibilityPanelTitle": "Accessibility",
+  "accessibilityFloatingToggle": "Floating accessibility button",
+  "accessibilityFloatingRemovedHint": "Accessibility button hidden. Turn it back on in Settings.",
+  "actionRemove": "Remove",
+  "accessibilityTextSizeLabel": "Text size",
+  "accessibilityTextSizeNormal": "Normal",
+  "accessibilityTextSizeLarge": "Large",
+  "accessibilityTextSizeExtraLarge": "Extra large",
+  "accessibilityReduceMotionLabel": "Reduce motion",
+  "accessibilityHighContrastLabel": "High contrast",
+  "tutorialWelcomeTitle": "Welcome to C2C – Connect to Collect",
+  "tutorialWelcomeBody": "Connect with students, explore all campus events, earn points, and enjoy exclusive rewards.",
+  "tutorialMatchesTitle": "Find your people",
+  "tutorialMatchesBody": "Browse students who share your faculty, interests, and hobbies, then message them to set up a meetup.",
+  "tutorialScanTitle": "Scan to earn",
+  "tutorialScanBody": "Show or scan a QR code at meetups and events to earn points automatically.",
+  "tutorialBenefitsTitle": "Spend your points",
+  "tutorialBenefitsBody": "Redeem points for real perks from campus partners in the Benefits tab.",
+  "tutorialChampionsTitle": "Climb the leaderboard",
+  "tutorialChampionsBody": "Top 3 students each month win a bonus — check Monthly Champions to see where you stand.",
+  "tutorialBackAction": "Back",
+  "tutorialNextAction": "Next",
+  "tutorialGetStartedAction": "Get Started",
+  "demoEventCheckInTitle": "How Event Points Work",
+  "demoEventCheckInMessage": "Registering for an event doesn't automatically earn points. When you arrive, scan the event QR code—or ask the host to enter your Student ID—to receive your points.",
+  "demoMeetingStep1Title": "Your QR Code",
+  "demoMeetingStep1Message": "Show this to the other student — it refreshes every 10 seconds for security.",
+  "demoMeetingStep2Title": "Scan the Other Student's QR",
+  "demoMeetingStep2Message": "Scan their code too. Points are only awarded once you've both scanned each other.",
+  "demoGroupMeetingTitle": "About Group Meetings",
+  "demoGroupMeetingMessage": "If you are a group of 3 or more people and want to meet, create a group meeting here. The organizer receives 25 points when at least two other participants scan them, and each scanning participant receives 15 points.",
+  "demoBenefitsCatalogTitle": "Before You Redeem",
+  "demoBenefitsCatalogMessage": "Redeeming a benefit spends your points immediately, and you can only hold one active card per benefit at a time.",
+  "demoDigitalCardTitle": "Redeem This Card",
+  "demoDigitalCardMessage": "This is the barcode for redeeming your benefit. When you get to the business, show it to the seller to receive the benefit. Please note: scanning the barcode and tapping \"Redeem\" redeems the benefit immediately, no matter who scanned it. So don't scan it yourself — only show it to the seller or a representative of the business where the benefit is redeemed.",
+  "demoMatchingTitle": "Compatibility Match",
+  "demoMatchingMessage": "This percentage shows how closely your interests, faculty, and languages match. A higher percentage means you have more in common.",
+  "demoGuidedMatchTabTitle": "Tap here",
+  "demoGuidedMatchTabMessage": "Tap the Matches tab to see students you might connect with.",
+  "demoGuidedViewProfileTitle": "Tap here",
+  "demoGuidedViewProfileMessage": "Tap View Profile to check out a student's full profile.",
+  "demoProgramTitle": "Program Points",
+  "demoProgramMessage": "Points are awarded per session — each session needs its own check-in to count.",
+  "demoAccessibilityTitle": "Accessibility Shortcut",
+  "demoAccessibilityMessage": "You can drag this button anywhere on the screen. Drag it to the bottom area to hide it. You can enable it again from Settings.",
+  "demoChampionsTitle": "Monthly Champions",
+  "demoChampionsMessage": "This leaderboard tracks points earned this month only, and resets on the 1st. Your rank card shows exactly where you stand.",
+  "demoReportUserTitle": "Report a User",
+  "demoReportUserMessage": "It is important to know about this option: if a user behaves inappropriately, makes you feel uncomfortable, or there is an issue our team should know about, you can report them here. The report will be sent to the system team for review and handling.",
+  "settingsHelpSectionTitle": "Help & Tutorials",
+  "settingsReplayIntroAction": "Replay App Introduction",
+  "settingsReplayTutorialsAction": "Replay Tutorials",
+  "settingsReplayTutorialsToast": "Tutorials reset — you'll see them again as you use the app.",
+  "profileLoadError": "Couldn't load your profile.",
+  "profileAboutTitle": "About",
+  "profileAboutEmpty": "You haven't added a bio yet.",
+  "profileInterestsLabel": "Interests",
+  "profileInterestsEmpty": "You haven't added any interests yet",
+  "profileLanguagesTitle": "Languages",
+  "profileLanguagesEmpty": "You haven't added any languages yet",
+  "profileStudiesTitle": "Studies",
+  "profileFacultyLabel": "Faculty",
+  "profileFieldOfStudyLabel": "Field of study",
+  "searchableFieldMultipleHint": "You can select multiple",
+  "searchableFieldPlaceholder": "Tap to select",
+  "searchableFieldSearchHint": "Search",
+  "searchableFieldNoMatches": "No matches",
+  "searchableFieldDone": "Done",
+  "profileGenderLabel": "Gender",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderUndisclosed": "Prefer not to say",
+  "profilePhotoLabel": "Profile picture",
+  "profilePhotoChange": "Change photo",
+  "profilePhotoAdd": "Add photo",
+  "profilePhotoUploadError": "Couldn't upload the photo. Please try again.",
+  "profileBioHint": "Tell other students a bit about yourself",
+  "profileOptionsLoadError": "Couldn't load options.",
+  "profileOptionsEmpty": "No options available yet.",
+  "actionRetry": "Retry",
+  "errorSelectFieldOfStudy": "Please select at least one field of study",
+  "profileDegreeLabel": "Degree",
+  "profileYearLabel": "Year of study",
+  "profileYearShort": "Year {year}",
+  "@profileYearShort": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditAction": "Edit profile",
+  "profileSettingsTitle": "Settings",
+  "profileLanguageLabel": "Language",
+  "profilePolicyLabel": "Policy & terms of use",
+  "profileLogoutAction": "Log out",
+  "profileDeleteAccountAction": "Delete account",
+  "profileDeleteAccountConfirmTitle": "Delete your account?",
+  "profileDeleteAccountConfirmMessage": "After you request deletion your account is deactivated for 30 days. At the end of that period it is permanently deleted. If you sign back in to the app within those 30 days, the deletion request is cancelled and your account stays active.",
+  "profileDeleteAccountConfirmAction": "Request deletion",
+  "profileDeleteAccountInProgress": "Sending deletion request…",
+  "profileDeleteAccountError": "We couldn't send the deletion request. Please try again or contact support.",
+  "profileLogoutConfirmTitle": "Log out of your account?",
+  "profileAppVersion": "C2C app version {version}",
+  "@profileAppVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEditTitle": "Edit Profile",
+  "profileEditError": "Couldn't save your profile.",
+  "profileSaveAction": "Save changes",
+  "notificationsTitle": "Notifications",
+  "notificationsLoadError": "Couldn't load your notifications.",
+  "notificationsEmpty": "You have no notifications yet.",
+  "notificationsSelectedCount": "{count} selected",
+  "@notificationsSelectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "notificationsSelectAll": "Select all",
+  "notificationsMarkRead": "Mark as read",
+  "notificationsMarkUnread": "Mark as unread",
+  "notificationsDeleteAction": "Delete",
+  "notificationsClearAll": "Clear all",
+  "notificationsDeleteConfirmTitle": "Delete notifications?",
+  "notificationsDeleteConfirmMessage": "This will permanently delete {count} notification(s). This can't be undone.",
+  "@notificationsDeleteConfirmMessage": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "notificationsClearAllConfirmTitle": "Clear all notifications?",
+  "notificationsClearAllConfirmMessage": "This will permanently delete all your notifications. This can't be undone.",
+  "notificationTargetLoadError": "Couldn't open this — it may no longer be available.",
+  "notificationPointsEarned": "Received {points} points",
+  "@notificationPointsEarned": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationPointsEarnedWithTitle": "Received {points} points – {title}",
+  "@notificationPointsEarnedWithTitle": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationNewMessage": "New message from {name}",
+  "@notificationNewMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationMeetingProposal": "New proposal: meeting at {time}",
+  "@notificationMeetingProposal": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationMeetingProposalGeneric": "New meeting proposal",
+  "notificationGeneric": "New notification",
+  "surveysTitle": "Surveys",
+  "homeSurveysSection": "Available Surveys",
+  "homeSurveysBannerCta": "Fill a quick survey and get points!",
+  "surveysTabActive": "Active Surveys",
+  "surveysTabCompleted": "Completed Surveys",
+  "surveysFilterPending": "Pending",
+  "surveysFilterCompleted": "Completed",
+  "surveysFilterIncoming": "Incoming",
+  "surveysEmptyPending": "No surveys waiting for you right now.",
+  "surveysEmptyCompleted": "You haven't completed any surveys yet.",
+  "surveysEmptyIncoming": "No upcoming surveys scheduled.",
+  "surveysLoadError": "Couldn't load surveys.",
+  "surveysEndsToday": "Ends today",
+  "surveysEndsInDays": "Ends in {days} days",
+  "@surveysEndsInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyStartAction": "Start Survey",
+  "surveyPointsLabel": "{points} pts",
+  "@surveyPointsLabel": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "surveySubmitAction": "Submit",
+  "surveySubmitSuccess": "You earned {points} points!",
+  "@surveySubmitSuccess": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "surveySubmitErrorGeneric": "Couldn't submit your answers. Try again.",
+  "surveySubmitErrorAlreadyAnswered": "You've already completed this survey.",
+  "surveySubmitErrorClosed": "This survey is closed.",
+  "surveySubmitErrorNotYetOpen": "This survey isn't open yet.",
+  "surveyDetailLoadError": "Couldn't load this survey.",
+  "surveyTextAnswerHint": "Type your answer",
+  "surveyTextAnswerRequired": "Please answer every question before submitting.",
+  "tourIntroTitle": "Great, you’re successfully signed in!",
+  "tourIntroDescription": "Now we’ll briefly introduce you to the app and its main buttons and features.",
+  "tourNextAction": "Next",
+  "tourMyEventsTitle": "My Events",
+  "tourMyEventsDescription": "Here you can see the events you registered for, the meetings you scheduled with other students, and track your participation.",
+  "tourPointsTitle": "My Points",
+  "tourPointsDescription": "This is the number of points you have earned so far. You can earn points by attending events, meeting other students, and taking part in other activities in the app, then use them to redeem benefits.",
+  "tourChampionsTitle": "Monthly Champions",
+  "tourChampionsDescription": "Earn points, climb the ranking, and reach the top! Here you can track your position and see who leads the monthly ranking. At the end of each month, the three students with the most points receive bonus points.",
+  "tourSurveysTitle": "Surveys",
+  "tourSurveysDescription": "Share what you think and earn points too! Short surveys will appear here for you to answer easily, and you will receive points for every survey you complete.",
+  "tourAccessibilityTitle": "Accessibility Button",
+  "tourAccessibilityDescription": "Open accessibility options here and adapt the app display to your needs. You can drag the accessibility button anywhere convenient on the screen, and remove or restore it at any time from the app settings.",
+  "tourMatchesNavTitle": "Meet & Connect",
+  "tourMatchesNavDescription": "Meet the students around you on campus, discover what you have in common, and arrange to meet on campus! Met up? Scan each other during the meeting and earn points together. Tap here to continue.",
+  "tourScanNavTitle": "Scan",
+  "tourBenefitsNavTitle": "Benefits",
+  "tourTapToContinue": "Tap the highlighted button to continue.",
+  "tourCompatibilityTitle": "Compatibility Percentage",
+  "tourCompatibilityDescription": "A compatibility percentage appears next to each student and is calculated from things you have in common, such as fields of study, interests, and languages. The higher the percentage, the more characteristics you share.",
+  "tourChatTitle": "Chat",
+  "tourChatDescription": "Here you can chat with and get to know other students. Using the (+) button in the chat, you can schedule a meeting that will be saved in ‘My Events’. During the meeting, an option will open to scan each other to confirm that you met, and after confirmation you will receive the meeting points.",
+  "tourStudentProfileTitle": "Profile",
+  "tourStudentProfileDescription": "Here you can get to know the student a little better and see the details they chose to share on their profile, such as their field of study, languages, interests, and additional information about them.",
+  "tourReportTitle": "Report a User",
+  "tourReportDescription": "It is important to know this option: if a user behaves inappropriately, makes you feel uncomfortable, or there is an issue our team should know about, you can report it here. The report will be sent to the system team for review and handling.",
+  "tourScanCameraTitle": "Event QR Scan",
+  "tourScanCameraDescription": "Arrived at an event? Scan the QR code here to confirm your attendance and receive points. This camera is for event scanning only. Meetings with students use a separate scan that opens automatically inside the meeting at its scheduled time. You can find your scheduled meetings in ‘My Events’.",
+  "tourStudentIdTitle": "Student Number",
+  "tourStudentIdDescription": "This is your personal identification number in the app. If you missed the QR scan at an event or there was a scanning problem, you can give this number to the event host so they can add you manually.",
+  "tourBenefitsPageTitle": "Benefits",
+  "tourBenefitsPageDescription": "It’s time to enjoy the points you’ve earned! Here you can see available benefits, read their details, check how many points are required, and choose the benefit you want to redeem.",
+  "tourWalletTitle": "My Wallet",
+  "tourTapWalletDescription": "Tap the wallet button to continue.",
+  "tourWalletDescription": "Every benefit you redeem is waiting for you here. In the wallet you can find the benefits you chose to redeem and open each benefit’s digital card. When you arrive at the business, show the digital card and enjoy your benefit.",
+  "tourProfileTitle": "Profile",
+  "tourProfileDescription": "This is your personal C2C profile. Here you can view and update the details you want other students to know about you. You can also change the app language and accessibility button, and view open surveys and the terms of use in the settings below.",
+  "tourReplayAction": "Replay step-by-step guide",
+  "surveyAnswerRequired": "Please answer all questions before submitting.",
+  "tourProfileButtonTitle": "Profile",
+  "tourProfileButtonDescription": "Here you can get to know the student a little better and see the details they chose to share on their profile, such as their field of study, languages, interests, and additional information about them.",
+  "demoChatBlockTitle": "Block a user",
+  "demoChatBlockMessage": "You can block this user from here. Once blocked, they won't be able to send you messages and you won't be able to send them messages either. You can block and unblock at any time by tapping the button.",
+  "demoChatMeetingTitle": "Schedule a meeting",
+  "demoChatMeetingMessage": "From here you can arrange a meeting with the student you're chatting with. Set up a meeting, meet on campus and earn points together! A first meeting with a new student earns each of you 25 points, a second meeting with the same student 20 points, and a third meeting 10 points. Please note: you can arrange one meeting per day with the same student, and up to 5 meetings with different students on the same day.",
+  "tourBenefitsStatusTitle": "My status",
+  "tourBenefitsStatusDescription": "Here you can see your points balance, progress toward the next benefit, and a shortcut to your digital wallet.",
+  "tourWalletTapDescription": "Your digital wallet stores the benefits you redeemed. Tap My Wallet above or the wallet button to open it.",
+  "tourMatchesIntroTitle": "Student Matching",
+  "tourMatchesIntroDescription": "Here you can find students to get to know, see your compatibility score, chat with them, and arrange a one-to-one meeting through the app.",
+  "externalLinkOpenFailedCopied": "Couldn't open the link — it was copied to your clipboard instead.",
+  "homeEventsNextMonth": "Events in the Next Month",
+  "homeEmptyEventsNextMonth": "No events in the next month right now.",
+  "eventFullNotice": "The event is full. If additional spots become available, registration will reopen here.",
+  "eventFullAction": "Event full",
+  "tourEventsNextMonthTitle": "Events in the Next Month",
+  "tourEventsNextMonthDescription": "This section shows only events taking place within the coming month — a quick look at what's happening soon.",
+  "tourUpcomingEventsTitle": "All Events",
+  "tourUpcomingEventsDescription": "This section shows all events currently open for registration, whenever they take place — including ones more than a month away. Tap an event to read the details and register.",
+  "authSpamFolderNote": "If you can't find the email in your inbox, please check your spam folder.",
+  "errorSelectFaculty": "Please select a faculty",
+  "errorSelectDegree": "Please select a degree level",
+  "errorSelectGender": "Please select a gender",
+  "errorSelectYearOfStudy": "Please select your year of study",
+  "profileRequiredFieldsMissing": "Please complete all required fields before continuing.",
+  "eventShareAction": "Share event",
+  "eventShareCopyLink": "Copy link",
+  "eventShareViaApps": "Share via…",
+  "eventShareLinkCopied": "Link copied to clipboard.",
+  "eventShareFailed": "Couldn't share the event. Please try again.",
+  "eventShareMessage": "{title} — see the event in the C2C app:",
+  "@eventShareMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "eventNotFoundTitle": "Event unavailable",
+  "eventNotFoundMessage": "This event no longer exists, or it isn't available to your account.",
+  "proposeMeetingRespondError": "Couldn't update the meeting. Please try again.",
+  "proposeMeetingAlreadyResponded": "This meeting request has already been answered.",
+  "notificationEventReminderTomorrow": "Tomorrow: {title}",
+  "@notificationEventReminderTomorrow": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventReminderTomorrowGeneric": "You have an event tomorrow",
+  "notificationEventReminderToday": "Today: {title}",
+  "@notificationEventReminderToday": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationEventReminderTodayGeneric": "You have an event today",
+  "eventReminderPopupTitleTomorrow": "Your event is tomorrow",
+  "eventReminderPopupTitleToday": "Your event is today",
+  "eventReminderPopupLocationLabel": "Location",
+  "eventReminderPopupStartLabel": "Starts",
+  "eventReminderPopupEndLabel": "Ends",
+  "eventReminderPopupDismiss": "Got it",
+  "eventReminderPopupOpenEvent": "View event",
+  "programPendingApprovalStatus": "Your registration request was sent. We will update you here once you are accepted to the event.",
+  "programAcceptedStatus": "You have been accepted",
+  "profileFullNameWarning": "Please note: enter your full name. This is the name event organizers will see, so use your full name rather than a nickname.",
+  "registerPendingApproval": "Your registration request was sent and is waiting for approval.",
+  "eventPendingApprovalLabel": "Awaiting approval"
+}

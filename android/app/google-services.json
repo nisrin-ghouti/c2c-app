@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "317086989303",
+    "project_id": "connecttocollect-858b6",
+    "storage_bucket": "connecttocollect-858b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317086989303:android:a33a23d8741de426eb8cf2",
+        "android_client_info": {
+          "package_name": "com.c2c.connecttocollect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByJ2S5HY5HUOPYE2bCOLnh6scH6oYCQh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

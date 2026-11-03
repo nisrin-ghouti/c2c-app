@@ -1,0 +1,121 @@
+# Cloud iOS builds for C2C (no local Mac required).
+#
+# Prerequisites (one-time, in Codemagic UI + App Store Connect):
+# 1. Push this repo to GitHub/GitLab/Bitbucket and add it in Codemagic.
+# 2. Team settings → Integrations → App Store Connect API key
+#    (App Manager). Name it exactly: Nesrin Gouti ASC
+#    — or change the `integrations.app_store_connect` value below to match.
+# 3. Application → Environment variables → group `c2c_secrets`:
+#      SUPABASE_URL, SUPABASE_ANON_KEY  (same as local .env; mark Secret)
+# 4. Trigger workflow `ios-testflight` manually or on a tag.
+#
+# Docs: https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
+
+workflows:
+  ios-testflight:
+    name: iOS → TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      # Must match the integration name in Codemagic → Team → Integrations
+      app_store_connect: Nesrin Gouti ASC
+    environment:
+      flutter: stable
+      # Matches local handoff / Apple iOS 26 SDK requirement (Codemagic has 26.6 default)
+      xcode: 26.6
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.c2c.connecttocollect
+      groups:
+        - c2c_secrets
+      vars:
+        APP_STORE_APPLE_ID: "6806632645"
+        BUNDLE_ID: com.c2c.connecttocollect
+        XCODE_WORKSPACE: ios/Runner.xcworkspace
+        XCODE_SCHEME: Runner
+    scripts:
+      - name: Write Flutter .env from secrets
+        script: |
+          set -euo pipefail
+          : "${SUPABASE_URL:?Set SUPABASE_URL in Codemagic group c2c_secrets}"
+          : "${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY in Codemagic group c2c_secrets}"
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' \
+            "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+      - name: Enable Swift Package Manager
+        # Required: firebase_messaging + mobile_scanner need hybrid SPM + CocoaPods
+        script: flutter config --enable-swift-package-manager
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Install CocoaPods
+        script: |
+          cd ios && pod install
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          echo "Using build number: ${BUILD_NUMBER}"
+          flutter build ipa --release \
+            --build-number="$BUILD_NUMBER" \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - support@c2c-connect2collect.com
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Leave false until metadata/screenshots/privacy are ready in ASC
+        submit_to_app_store: false
+
+  ios-ipa-only:
+    name: iOS IPA (no upload)
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      app_store_connect: Nesrin Gouti ASC
+    environment:
+      flutter: stable
+      xcode: 26.6
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.c2c.connecttocollect
+      groups:
+        - c2c_secrets
+      vars:
+        APP_STORE_APPLE_ID: "6806632645"
+    scripts:
+      - name: Write Flutter .env from secrets
+        script: |
+          set -euo pipefail
+          : "${SUPABASE_URL:?Set SUPABASE_URL in Codemagic group c2c_secrets}"
+          : "${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY in Codemagic group c2c_secrets}"
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' \
+            "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+      - name: Enable Swift Package Manager
+        script: flutter config --enable-swift-package-manager
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Install CocoaPods
+        script: cd ios && pod install
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
