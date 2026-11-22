@@ -114,34 +114,37 @@ class CampusEventCard extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child:
-                          event.imageUrl != null && event.imageUrl!.isNotEmpty
-                          ? Image.network(
-                              event.imageUrl!,
-                              width: 84,
-                              height: 84,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Container(
+                      child: ColoredBox(
+                        color: AppColors.surfaceMuted,
+                        child:
+                            event.imageUrl != null && event.imageUrl!.isNotEmpty
+                            ? Image.network(
+                                event.imageUrl!,
                                 width: 84,
                                 height: 84,
-                                color: AppColors.surfaceMuted,
-                                alignment: Alignment.center,
-                                child: const Text(
-                                  '🎉',
-                                  style: TextStyle(fontSize: 28),
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, _, _) => const SizedBox(
+                                  width: 84,
+                                  height: 84,
+                                  child: Center(
+                                    child: Text(
+                                      '🎉',
+                                      style: TextStyle(fontSize: 28),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(
+                                width: 84,
+                                height: 84,
+                                child: Center(
+                                  child: Text(
+                                    '🎉',
+                                    style: TextStyle(fontSize: 28),
+                                  ),
                                 ),
                               ),
-                            )
-                          : Container(
-                              width: 84,
-                              height: 84,
-                              color: AppColors.surfaceMuted,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                '🎉',
-                                style: TextStyle(fontSize: 28),
-                              ),
-                            ),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -545,4 +548,3 @@ class _StatusBar extends StatelessWidget {
     );
   }
 }
-

@@ -58,20 +58,23 @@ class BenefitCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: benefit.imageUrl != null && benefit.imageUrl!.isNotEmpty
-                  ? Image.network(
-                      benefit.imageUrl!,
-                      width: 84,
-                      height: 84,
-                      fit: BoxFit.cover,
-                    )
-                  : Container(
-                      width: 84,
-                      height: 84,
-                      color: AppColors.surfaceMuted,
-                      alignment: Alignment.center,
-                      child: const Text('🎁', style: TextStyle(fontSize: 28)),
-                    ),
+              child: ColoredBox(
+                color: AppColors.surfaceMuted,
+                child: benefit.imageUrl != null && benefit.imageUrl!.isNotEmpty
+                    ? Image.network(
+                        benefit.imageUrl!,
+                        width: 84,
+                        height: 84,
+                        fit: BoxFit.contain,
+                      )
+                    : const SizedBox(
+                        width: 84,
+                        height: 84,
+                        child: Center(
+                          child: Text('🎁', style: TextStyle(fontSize: 28)),
+                        ),
+                      ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(

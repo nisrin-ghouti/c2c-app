@@ -89,15 +89,21 @@ class EventProfileBody extends ConsumerWidget {
         // 2. Image
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: event.imageUrl != null && event.imageUrl!.isNotEmpty
-              ? Image.network(
-                  event.imageUrl!,
-                  height: 190,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => const _ImageFallback(),
-                )
-              : const _ImageFallback(),
+          child: ColoredBox(
+            color: AppColors.surfaceMuted,
+            child: event.imageUrl != null && event.imageUrl!.isNotEmpty
+                ? Image.network(
+                    event.imageUrl!,
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                    frameBuilder: (context, child, frame, _) {
+                      if (frame == null) return const _ImageFallback();
+                      return child;
+                    },
+                    errorBuilder: (_, _, _) => const _ImageFallback(),
+                  )
+                : const _ImageFallback(),
+          ),
         ),
 
         // 3. Organizer / business name

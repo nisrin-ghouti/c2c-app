@@ -55,23 +55,23 @@ class DigitalCardTile extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
-                  child: card.imageUrl != null && card.imageUrl!.isNotEmpty
-                      ? Image.network(
-                          card.imageUrl!,
-                          width: 64,
-                          height: 64,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          width: 64,
-                          height: 64,
-                          color: AppColors.surfaceMuted,
-                          alignment: Alignment.center,
-                          child: const Text(
-                            '🎁',
-                            style: TextStyle(fontSize: 24),
+                  child: ColoredBox(
+                    color: AppColors.surfaceMuted,
+                    child: card.imageUrl != null && card.imageUrl!.isNotEmpty
+                        ? Image.network(
+                            card.imageUrl!,
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.contain,
+                          )
+                        : const SizedBox(
+                            width: 64,
+                            height: 64,
+                            child: Center(
+                              child: Text('🎁', style: TextStyle(fontSize: 24)),
+                            ),
                           ),
-                        ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

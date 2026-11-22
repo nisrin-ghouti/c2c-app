@@ -72,15 +72,21 @@ class BenefitProfileScreen extends StatelessWidget {
             // 2. Image
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: _has(benefit.imageUrl)
-                  ? Image.network(
-                      benefit.imageUrl!,
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const _ImageFallback(),
-                    )
-                  : const _ImageFallback(),
+              child: ColoredBox(
+                color: AppColors.surfaceMuted,
+                child: _has(benefit.imageUrl)
+                    ? Image.network(
+                        benefit.imageUrl!,
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth,
+                        frameBuilder: (context, child, frame, _) {
+                          if (frame == null) return const _ImageFallback();
+                          return child;
+                        },
+                        errorBuilder: (_, _, _) => const _ImageFallback(),
+                      )
+                    : const _ImageFallback(),
+              ),
             ),
 
             // 3. Business name
