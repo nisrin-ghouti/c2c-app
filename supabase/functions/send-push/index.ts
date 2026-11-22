@@ -12,11 +12,14 @@
 // pushes from one notification row. A device that has not reported a language
 // yet falls back to English, which is the app's own `SupportedLocales.fallback`.
 //
-// Dynamic content (an event or benefit title) is localized from the
-// translations the notify triggers now copy into `notifications.data`
-// (`title_en`/`title_he`/`title_ar`, migration 0075), falling back to the
-// canonical `title` whenever the row predates that or the translation is
-// missing — so nothing ever renders as an empty string.
+// Dynamic content (an event, benefit, or survey title) is localized from
+// `title_en`/`title_he`/`title_ar` on the notification (migration 0075).
+// When the device's language is missing — a survey has no translation
+// columns, or the event was approved before translate-content ran — the
+// canonical title is translated once and cached (migration
+// 20261122115441) and that result is what this device receives. A
+// translation already on the payload is left as written. Chat message
+// text is not translated: that is the sender's own words.
 //
 // Required secrets (set with `supabase secrets set`):
 //   FIREBASE_SERVICE_ACCOUNT  – the full service-account JSON (one line)
@@ -285,8 +288,6 @@ function messageFor(
     case "meeting_proposal":
       return { title: t.meetingRequest, body: t.meetingRequestBody };
     case "survey_published":
-      // Surveys have a single `title` column with no translations (0027), so
-      // this is the stored text whatever the device language.
       return { title: t.newSurvey, body: eventTitle || t.newSurveyBody };
     case "points_earned":
       return { title: t.pointsEarned, body: t.pointsEarnedBody.replace("{amount}", String(n("amount"))) };
@@ -309,13 +310,162 @@ function messageFor(
   }
 }
 
+// Titles whose body is a piece of content (event, benefit, survey), as
+// opposed to a chat message or a fixed sentence. These are the ones that
+// follow the device language even when the stored translation is missing.
+const LOCALIZED_TITLE_TYPES = new Set([
+  "event_published",
+  "benefit_published",
+  "event_pending_approval",
+  "event_decision",
+  "benefit_redeemed",
+  "survey_published",
+  "event_reminder_tomorrow",
+  "event_reminder_today",
+]);
+
+type TitleClient = ReturnType<typeof createClient>;
+
+function decodeHtml(value: string): string {
+  const named: Record<string, string> = {
+    amp: "&",
+    lt: "<",
+    gt: ">",
+    quot: '"',
+    apos: "'",
+  };
+  return value
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&([a-z]+);/gi, (entity, name) => named[name.toLowerCase()] ?? entity);
+}
+
+async function translateTitle(text: string, target: Lang, apiKey: string): Promise<string> {
+  const res = await fetch(
+    `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: text, target, format: "text" }),
+    },
+  );
+  if (!res.ok) throw new Error(`translate ${target} failed (${res.status})`);
+  const json = await res.json();
+  const value = json?.data?.translations?.[0]?.translatedText;
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`translate ${target} returned nothing`);
+  }
+  return decodeHtml(value).trim();
+}
+
+/// Fills empty `title_en` / `title_he` / `title_ar` on [data] from the
+/// canonical `title`. Never overwrites a translation the payload already
+/// has, and never throws — a failed translation leaves the old fallback
+/// (the organizer's text) in place so the push still goes out.
+async function ensureLocalizedTitles(
+  supabase: TitleClient,
+  data: Record<string, unknown>,
+): Promise<void> {
+  try {
+    const canonical = typeof data.title === "string" ? data.title.trim() : "";
+    if (!canonical) return;
+
+    const langs: Lang[] = ["en", "he", "ar"];
+    const missing = () =>
+      langs.filter((lang) => {
+        const value = data[`title_${lang}`];
+        return typeof value !== "string" || value.trim() === "";
+      });
+    if (missing().length === 0) return;
+
+    const apiKey = Deno.env.get("GOOGLE_TRANSLATE_API_KEY");
+    if (!apiKey) return;
+
+    const apply = (row: Partial<Record<Lang, string>>) => {
+      for (const lang of missing()) {
+        const value = row[lang];
+        if (typeof value === "string" && value.trim() !== "") {
+          data[`title_${lang}`] = value.trim();
+        }
+      }
+    };
+
+    const read = async (): Promise<Partial<Record<Lang, string>> | null> => {
+      const { data: row, error } = await supabase.rpc("get_push_title_translation", {
+        _source: canonical,
+      });
+      if (error || !row || typeof row !== "object") return null;
+      const record = row as Record<string, unknown>;
+      if (record.ready !== true) return null;
+      return {
+        en: typeof record.title_en === "string" ? record.title_en : "",
+        he: typeof record.title_he === "string" ? record.title_he : "",
+        ar: typeof record.title_ar === "string" ? record.title_ar : "",
+      };
+    };
+
+    const cached = await read();
+    if (cached) apply(cached);
+    if (missing().length === 0) return;
+
+    const { data: claim, error: claimError } = await supabase.rpc(
+      "claim_push_title_translation",
+      { _source: canonical },
+    );
+    if (claimError || claim === "skip") return;
+
+    if (claim === "ready") {
+      const row = await read();
+      if (row) apply(row);
+      return;
+    }
+
+    if (claim === "wait") {
+      for (let attempt = 0; attempt < 8; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        const row = await read();
+        if (!row) continue;
+        apply(row);
+        if (missing().length === 0) return;
+      }
+      return;
+    }
+
+    if (claim !== "translate") return;
+
+    try {
+      const [en, he, ar] = await Promise.all([
+        translateTitle(canonical, "en", apiKey),
+        translateTitle(canonical, "he", apiKey),
+        translateTitle(canonical, "ar", apiKey),
+      ]);
+      const { error: saveError } = await supabase.rpc("save_push_title_translation", {
+        _source: canonical,
+        _title_en: en,
+        _title_he: he,
+        _title_ar: ar,
+      });
+      if (saveError) throw new Error(saveError.message);
+      apply({ en, he, ar });
+    } catch (error) {
+      console.error("push title translation failed", error);
+      await supabase.rpc("release_push_title_translation", { _source: canonical });
+    }
+  } catch (error) {
+    console.error("push title translation skipped", error);
+  }
+}
+
 // ---- Handler --------------------------------------------------------------
 
 Deno.serve(async (req) => {
   try {
     const payload = (await req.json()) as WebhookPayload;
     const note = payload?.record;
-    if (!note || payload.table !== "notifications") {
+    // INSERT only. Filling a missing title writes the translations back onto
+    // this row so the in-app list matches the push; that UPDATE must not
+    // send the push a second time.
+    if (!note || payload.table !== "notifications" || (payload.type && payload.type !== "INSERT")) {
       return new Response("ignored", { status: 200 });
     }
 
@@ -331,6 +481,19 @@ Deno.serve(async (req) => {
 
     if (!tokens || tokens.length === 0) {
       return new Response("no tokens", { status: 200 });
+    }
+
+    const data = note.data ?? {};
+    note.data = data;
+    if (LOCALIZED_TITLE_TYPES.has(note.type)) {
+      const titlesBefore = JSON.stringify([data.title_en, data.title_he, data.title_ar]);
+      await ensureLocalizedTitles(supabase, data);
+      if (titlesBefore !== JSON.stringify([data.title_en, data.title_he, data.title_ar])) {
+        // The in-app row was stored before the translation existed. Keep it
+        // in step with the push. Failure here still sends the push.
+        const { error } = await supabase.from("notifications").update({ data }).eq("id", note.id);
+        if (error) console.error("push title write-back failed", error.message);
+      }
     }
 
     const serviceAccount = JSON.parse(Deno.env.get("FIREBASE_SERVICE_ACCOUNT")!);

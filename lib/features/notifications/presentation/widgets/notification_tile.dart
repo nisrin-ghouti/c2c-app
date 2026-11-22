@@ -133,7 +133,7 @@ class NotificationTile extends StatelessWidget {
             ? l10n.notificationBenefitRedeemedGeneric
             : l10n.notificationBenefitRedeemed(title);
       case AppNotificationType.surveyPublished:
-        final title = (notification.data['title'] as String?) ?? '';
+        final title = localized('title');
         return title.isEmpty
             ? l10n.notificationSurveyPublishedGeneric
             : l10n.notificationSurveyPublished(title);
