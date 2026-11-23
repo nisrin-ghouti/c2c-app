@@ -2336,7 +2336,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tourIntroDescription =>
-      'الآن سنعرّفكم باختصار على التطبيق وعلى أهم الأزرار والخيارات الموجودة فيه.';
+      'يمكنكم البدء باستخدام التطبيق. يمكنكم عرض الإرشادات في أي وقت من الإعدادات.';
 
   @override
   String get tourNextAction => 'التالي';

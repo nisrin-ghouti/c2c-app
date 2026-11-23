@@ -48,6 +48,15 @@ final matchingTourStepProvider = StateProvider<MatchingTourStep>(
   (ref) => MatchingTourStep.none,
 );
 
+/// Set by Settings → Replay step-by-step guide before the Home "seen" flag
+/// is cleared.
+///
+/// Signing in still shows the "you're signed in" dialog, then enters the app.
+/// That dialog no longer starts the coach marks. Replay is the path that does,
+/// and Home reads this so it can tell the two apart: clearing the seen flag
+/// alone would show the sign-in dialog again and dismiss straight into the app.
+final tourReplayRequestedProvider = StateProvider<bool>((ref) => false);
+
 /// Bumped by [closeMainTour]. Segment listeners capture the value when they
 /// register and ignore a later finish if it has changed.
 ///

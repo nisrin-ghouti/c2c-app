@@ -2332,7 +2332,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get tourIntroDescription =>
-      'עכשיו נערוך היכרות קצרה עם האפליקציה ונכיר את הכפתורים והאפשרויות המרכזיות שבה.';
+      'אפשר להתחיל להשתמש באפליקציה. את ההדרכה אפשר להפעיל בכל עת מההגדרות.';
 
   @override
   String get tourNextAction => 'הבא';

@@ -4345,7 +4345,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourIntroDescription.
   ///
   /// In en, this message translates to:
-  /// **'Now we’ll briefly introduce you to the app and its main buttons and features.'**
+  /// **'You can start using the app. The step-by-step guide is available anytime from Settings.'**
   String get tourIntroDescription;
 
   /// No description provided for @tourNextAction.

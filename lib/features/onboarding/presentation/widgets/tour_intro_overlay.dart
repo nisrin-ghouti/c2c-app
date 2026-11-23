@@ -79,7 +79,7 @@ class TourIntroOverlay extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: TextButton(
                       onPressed: onNext,
-                      child: Text(l10n.tourNextAction),
+                      child: Text(l10n.actionGotIt),
                     ),
                   ),
                 ],

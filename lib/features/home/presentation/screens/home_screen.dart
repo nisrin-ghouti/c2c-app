@@ -44,6 +44,35 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _tourLaunchScheduled = false;
 
+  void _startHomeCoachMarkTour(ProviderContainer container) {
+    final epoch = container.read(tourEpochProvider);
+    late VoidCallback homeFinishListener;
+    homeFinishListener = () {
+      // Deferred: showcaseview invokes these with `for (final cb in
+      // _onFinishCallbacks)`, and mutating that list inside a callback throws
+      // ConcurrentModificationError on the next moveNext(), silently skipping
+      // every callback after this one — including the tour's own listener.
+      scheduleMicrotask(
+        () => ShowcaseView.get().removeOnFinishCallback(homeFinishListener),
+      );
+      if (!mainTourStillCurrent(container, epoch)) return;
+      container
+          .read(demoFlagsControllerProvider)
+          .markSeen(DemoKey.accessibility);
+      container.read(homeCoachMarkControllerProvider.notifier).markSeen();
+      maybeStartGuidedMatchingTour(container);
+    };
+    ShowcaseView.get().addOnFinishCallback(homeFinishListener);
+    ShowcaseView.get().startShowCase([
+      HomeCoachMarkKeys.navHome,
+      // Back to back on purpose: the second step exists to draw the
+      // contrast with the first.
+      HomeCoachMarkKeys.homeEvents,
+      HomeCoachMarkKeys.homeUpcomingEvents,
+      ...HomeCoachMarkKeys.afterEventsTourOrder,
+    ]);
+  }
+
   Future<void> _showChampionsAnnouncements(
     BuildContext context,
     WidgetRef ref,
@@ -101,9 +130,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     });
 
-    // First-run step-by-step tour. Keep the Home "seen" flag false until
-    // the Home sequence itself finishes so standalone contextual demos (most
-    // importantly Accessibility) cannot race the intro or the main tour.
+    // First sign-in shows the success dialog, then the app. The coach-mark
+    // guide does not start on its own. Settings → Replay is the exception:
+    // it sets [tourReplayRequestedProvider] before clearing the seen flag.
+    // Leave that flag false until the Home sequence finishes on a replay, so
+    // standalone demos (Accessibility) cannot race the guide.
     final hasSeenHomeTour = ref.watch(hasSeenHomeCoachMarkProvider);
     if (hasSeenHomeTour) {
       _tourLaunchScheduled = false;
@@ -113,47 +144,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (!context.mounted) return;
         final container = ProviderScope.containerOf(context, listen: false);
 
-        final startTour = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) => TourIntroOverlay(
-            onNext: () => Navigator.of(dialogContext).pop(true),
-            onClose: () => Navigator.of(dialogContext).pop(false),
-          ),
-        );
-
-        if (!context.mounted) return;
-        if (startTour != true) {
-          closeMainTour(container);
+        if (container.read(tourReplayRequestedProvider)) {
+          container.read(tourReplayRequestedProvider.notifier).state = false;
+          _startHomeCoachMarkTour(container);
           return;
         }
 
-        final epoch = container.read(tourEpochProvider);
-        late VoidCallback homeFinishListener;
-        homeFinishListener = () {
-          // Deferred: showcaseview invokes these with `for (final cb in
-          // _onFinishCallbacks)`, and mutating that list inside a callback throws
-          // ConcurrentModificationError on the next moveNext(), silently skipping
-          // every callback after this one — including the tour's own listener.
-          scheduleMicrotask(
-            () => ShowcaseView.get().removeOnFinishCallback(homeFinishListener),
-          );
-          if (!mainTourStillCurrent(container, epoch)) return;
-          container
-              .read(demoFlagsControllerProvider)
-              .markSeen(DemoKey.accessibility);
-          container.read(homeCoachMarkControllerProvider.notifier).markSeen();
-          maybeStartGuidedMatchingTour(container);
-        };
-        ShowcaseView.get().addOnFinishCallback(homeFinishListener);
-        ShowcaseView.get().startShowCase([
-          HomeCoachMarkKeys.navHome,
-          // Back to back on purpose: the second step exists to draw the
-          // contrast with the first.
-          HomeCoachMarkKeys.homeEvents,
-          HomeCoachMarkKeys.homeUpcomingEvents,
-          ...HomeCoachMarkKeys.afterEventsTourOrder,
-        ]);
+        await showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => TourIntroOverlay(
+            onNext: () => Navigator.of(dialogContext).pop(),
+            onClose: () => Navigator.of(dialogContext).pop(),
+          ),
+        );
+
+        // Mark accessibility seen before the Home flag, or the floating
+        // button's own demo starts the moment the guide is recorded as seen.
+        await container
+            .read(demoFlagsControllerProvider)
+            .markSeen(DemoKey.accessibility);
+        closeMainTour(container);
       });
     }
     return Scaffold(

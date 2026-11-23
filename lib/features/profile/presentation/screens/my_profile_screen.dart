@@ -433,6 +433,10 @@ class _SettingsCardState extends ConsumerState<_SettingsCard> {
   /// Replays only the step-by-step coach-mark tour. The removed full-screen
   /// onboarding cards are intentionally not restored.
   Future<void> _replayStepByStepTour() async {
+    // Before the seen flag flips. Home stays mounted in the shell, so the
+    // flag change rebuilds it immediately — without this it would treat the
+    // replay as a first sign-in and dismiss into the app.
+    ref.read(tourReplayRequestedProvider.notifier).state = true;
     await ref.read(homeCoachMarkControllerProvider.notifier).reset();
     // Reset only contextual flags that are embedded in the main tour.
     // First-ever-only demos (digital card, chat controls, notifications and
