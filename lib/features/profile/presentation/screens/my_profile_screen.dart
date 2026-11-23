@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -23,13 +24,13 @@ import '../../../../core/push/push_service.dart';
 import '../../../legal/legal.dart';
 import '../../../legal/presentation/screens/legal_document_screen.dart';
 import '../../../home/presentation/widgets/points_badge.dart';
-import '../../../onboarding/presentation/controllers/home_coach_mark_controller.dart';
-import '../../../onboarding/domain/entities/demo_key.dart';
-import '../../../onboarding/presentation/controllers/demo_flags_controller.dart';
 import '../../../onboarding/presentation/controllers/guided_matching_tour_controller.dart';
+import '../../../onboarding/presentation/widgets/contextual_showcase.dart';
 import '../../../support/presentation/widgets/support_contacts_sheet.dart';
 import '../providers/profile_providers.dart';
 import 'edit_profile_screen.dart';
+
+final _profileHeroTourKey = GlobalKey();
 
 /// Interests are stored across two legacy option lists (`hobby` and
 /// `interest` — see the profile edit screens, which now present them as one
@@ -68,8 +69,20 @@ class MyProfileScreen extends ConsumerWidget {
 
     dismissPushedRoutesOnTourReplay(context, ref);
 
+    ref.listen(tabGuideRequestProvider, (previous, next) {
+      if (next != TabGuideTarget.profile) return;
+      ref.read(tabGuideRequestProvider.notifier).state = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!ShowcaseView.get().isTargetRendered(_profileHeroTourKey)) return;
+        ShowcaseView.get().startShowCase([_profileHeroTourKey]);
+      });
+    });
+
     return Scaffold(
-      appBar: AppHeaderBar(title: l10n.navProfile),
+      appBar: AppHeaderBar(
+        title: l10n.navProfile,
+        onOpenGuide: () => requestTabGuide(ref, TabGuideTarget.profile),
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => ref.refresh(myProfileProvider.future),
@@ -84,7 +97,13 @@ class MyProfileScreen extends ConsumerWidget {
             data: (profile) => ListView(
               padding: const EdgeInsets.only(bottom: 24),
               children: [
-                _ProfileHero(profile: profile),
+                TourShowcase(
+                  showcaseKey: _profileHeroTourKey,
+                  title: l10n.tourProfileTitle,
+                  description: l10n.tourProfileDescription,
+                  hidePrevious: true,
+                  child: _ProfileHero(profile: profile),
+                ),
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -430,30 +449,10 @@ class _SettingsCardState extends ConsumerState<_SettingsCard> {
     });
   }
 
-  /// Replays only the step-by-step coach-mark tour. The removed full-screen
-  /// onboarding cards are intentionally not restored.
-  Future<void> _replayStepByStepTour() async {
-    // Before the seen flag flips. Home stays mounted in the shell, so the
-    // flag change rebuilds it immediately — without this it would treat the
-    // replay as a first sign-in and dismiss into the app.
-    ref.read(tourReplayRequestedProvider.notifier).state = true;
-    await ref.read(homeCoachMarkControllerProvider.notifier).reset();
-    // Reset only contextual flags that are embedded in the main tour.
-    // First-ever-only demos (digital card, chat controls, notifications and
-    // champions) stay seen even when the user deliberately replays the main
-    // Step-by-Step tour.
-    await ref.read(demoFlagsControllerProvider).resetSelected(const [
-      DemoKey.accessibility,
-      DemoKey.matching,
-      DemoKey.reportUser,
-      DemoKey.eventCheckIn,
-    ]);
-    ref.read(matchingTourStepProvider.notifier).state = MatchingTourStep.none;
-    // Dismiss anything the previous tour pushed (a match profile), which
-    // goBranch cannot pop because it was pushed imperatively.
-    ref.read(tourGenerationProvider.notifier).state++;
-    if (!mounted) return;
-    context.go(AppRoutes.home);
+  /// Opens the profile guide in place. It explains this screen and does not
+  /// switch to another tab.
+  void _replayStepByStepTour() {
+    requestTabGuide(ref, TabGuideTarget.profile);
   }
 
   Future<void> _confirmLogout(AppLocalizations l10n) async {

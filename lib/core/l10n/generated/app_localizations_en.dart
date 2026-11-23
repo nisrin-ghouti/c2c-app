@@ -2366,7 +2366,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tourIntroDescription =>
-      'You can start using the app. The step-by-step guide is available anytime from Settings.';
+      'You can start using the app. Each tab has a guide button that explains only that tab.';
+
+  @override
+  String get tabGuideAction => 'Guide';
 
   @override
   String get tourNextAction => 'Next';

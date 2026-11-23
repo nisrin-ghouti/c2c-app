@@ -4345,8 +4345,14 @@ abstract class AppLocalizations {
   /// No description provided for @tourIntroDescription.
   ///
   /// In en, this message translates to:
-  /// **'You can start using the app. The step-by-step guide is available anytime from Settings.'**
+  /// **'You can start using the app. Each tab has a guide button that explains only that tab.'**
   String get tourIntroDescription;
+
+  /// No description provided for @tabGuideAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Guide'**
+  String get tabGuideAction;
 
   /// No description provided for @tourNextAction.
   ///

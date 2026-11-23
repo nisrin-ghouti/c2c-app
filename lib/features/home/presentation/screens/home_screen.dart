@@ -60,7 +60,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .read(demoFlagsControllerProvider)
           .markSeen(DemoKey.accessibility);
       container.read(homeCoachMarkControllerProvider.notifier).markSeen();
-      maybeStartGuidedMatchingTour(container);
     };
     ShowcaseView.get().addOnFinishCallback(homeFinishListener);
     ShowcaseView.get().startShowCase([
@@ -130,11 +129,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     });
 
-    // First sign-in shows the success dialog, then the app. The coach-mark
-    // guide does not start on its own. Settings → Replay is the exception:
-    // it sets [tourReplayRequestedProvider] before clearing the seen flag.
-    // Leave that flag false until the Home sequence finishes on a replay, so
-    // standalone demos (Accessibility) cannot race the guide.
+    // First sign-in shows the success dialog, then the app. The guide starts
+    // only from this tab's header button, and it stays on Home.
     final hasSeenHomeTour = ref.watch(hasSeenHomeCoachMarkProvider);
     if (hasSeenHomeTour) {
       _tourLaunchScheduled = false;
@@ -143,12 +139,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!context.mounted) return;
         final container = ProviderScope.containerOf(context, listen: false);
-
-        if (container.read(tourReplayRequestedProvider)) {
-          container.read(tourReplayRequestedProvider.notifier).state = false;
-          _startHomeCoachMarkTour(container);
-          return;
-        }
 
         await showDialog<void>(
           context: context,
@@ -167,9 +157,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         closeMainTour(container);
       });
     }
+
+    ref.listen(tabGuideRequestProvider, (previous, next) {
+      if (next != TabGuideTarget.home) return;
+      ref.read(tabGuideRequestProvider.notifier).state = null;
+      _startHomeCoachMarkTour(
+        ProviderScope.containerOf(context, listen: false),
+      );
+    });
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppHeaderBar(title: l10n.navHome),
+      appBar: AppHeaderBar(
+        title: l10n.navHome,
+        onOpenGuide: () => requestTabGuide(ref, TabGuideTarget.home),
+      ),
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(

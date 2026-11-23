@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -39,8 +37,8 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
 
   final _compatibilityShowcaseKey = GlobalKey();
   final _chatShowcaseKey = GlobalKey();
-  bool _mainMatchTourSequenceKicked = false;
-  bool _viewProfileTourSequenceKicked = false;
+  final _matchesPageShowcaseKey = GlobalKey();
+  bool _matchesGuide = false;
 
   @override
   void dispose() {
@@ -64,34 +62,6 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
     );
   }
 
-  /// Completes once this route's animation has settled, bounded so a tour
-  /// step can never hang waiting on one that fails to report completion.
-  Future<void> _waitForNavigationToSettle() async {
-    final animation = ModalRoute.of(context)?.animation;
-    if (animation != null &&
-        animation.status != AnimationStatus.completed &&
-        animation.status != AnimationStatus.dismissed) {
-      final completer = Completer<void>();
-      void listener(AnimationStatus status) {
-        if (status != AnimationStatus.completed &&
-            status != AnimationStatus.dismissed) {
-          return;
-        }
-        animation.removeStatusListener(listener);
-        if (!completer.isCompleted) completer.complete();
-      }
-
-      animation.addStatusListener(listener);
-      await completer.future.timeout(
-        const Duration(milliseconds: 800),
-        onTimeout: () {},
-      );
-    }
-    // A branch pop is not this route's own animation, so also give the
-    // framework a frame to finish laying the list out before measuring.
-    await Future<void>.delayed(const Duration(milliseconds: 350));
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -103,8 +73,32 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
     // targets.
     dismissPushedRoutesOnTourReplay(context, ref);
 
+    ref.listen(tabGuideRequestProvider, (previous, next) {
+      if (next != TabGuideTarget.matches) return;
+      ref.read(tabGuideRequestProvider.notifier).state = null;
+      setState(() => _matchesGuide = true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final candidates =
+            ref.read(matchCandidatesProvider).valueOrNull ?? const [];
+        final visible = _filters!.apply(candidates);
+        final keys = visible.isEmpty
+            ? [_matchesPageShowcaseKey]
+            : [
+                _compatibilityShowcaseKey,
+                _chatShowcaseKey,
+                profileExplanationTourShowcaseKey,
+              ];
+        if (!ShowcaseView.get().isTargetRendered(keys.first)) return;
+        ShowcaseView.get().startShowCase(keys);
+      });
+    });
+
     return Scaffold(
-      appBar: AppHeaderBar(title: l10n.matchesTitle),
+      appBar: AppHeaderBar(
+        title: l10n.matchesTitle,
+        onOpenGuide: () => requestTabGuide(ref, TabGuideTarget.matches),
+      ),
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(matchCandidatesProvider.future),
         child: candidatesAsync.when(
@@ -126,21 +120,14 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
             final compatibilityDemoSeen = ref.watch(
               hasSeenDemoProvider(DemoKey.matching),
             );
-            final tourStep = ref.watch(matchingTourStepProvider);
-            final mainMatchTour =
-                filtered.isNotEmpty &&
-                tourStep == MatchingTourStep.awaitingCompatibilityDemo;
-            // Reset once this step passes, so replaying the tour runs it
-            // again. The shell is a StatefulShellRoute.indexedStack, so this
-            // State outlives a replay and a one-shot flag would stay true —
-            // silently skipping the step and stalling the tour. Matches
-            // `scan_card.dart`, which already does this.
-            if (!mainMatchTour) _mainMatchTourSequenceKicked = false;
+            final showMatchesGuide = _matchesGuide && filtered.isNotEmpty;
 
-            // Outside the main first-run tour, preserve the original
-            // one-time contextual compatibility explanation unchanged.
+            // The one-time compatibility note stays, and it does not run
+            // while the student has the tab guide open.
             final showMatchingDemo =
-                filtered.isNotEmpty && !compatibilityDemoSeen && !mainMatchTour;
+                filtered.isNotEmpty &&
+                !compatibilityDemoSeen &&
+                !showMatchesGuide;
             if (showMatchingDemo) {
               startContextualDemoOnce(
                 context: context,
@@ -148,76 +135,6 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                 key: DemoKey.matching,
                 showcaseKeys: [_compatibilityShowcaseKey],
               );
-            }
-
-            // During the main tour, explain compatibility, Chat and Profile
-            // with the standard Previous/Next controls. After that sequence,
-            // require a real tap on the Profile button before continuing.
-            if (mainMatchTour && !_mainMatchTourSequenceKicked) {
-              _mainMatchTourSequenceKicked = true;
-              ref.read(demoFlagsControllerProvider).markSeen(DemoKey.matching);
-              WidgetsBinding.instance.addPostFrameCallback((_) async {
-                if (!mounted) return;
-                // Wait for navigation to settle before starting.
-                //
-                // The tour taps the Matches tab, and `goBranch(initialLocation:
-                // true)` pops whatever screen an earlier tour left on this
-                // branch — an animation. showcaseview measures its target once,
-                // when the showcase starts, and never re-measures, so starting
-                // mid-pop caches a moving position and the step becomes
-                // unusable: the overlay paints but its tooltip cannot be
-                // reached, which reads as the tour freezing. Same failure mode
-                // as the report-user step on a pushed route.
-                await _waitForNavigationToSettle();
-                if (!mounted) return;
-                if (ref.read(matchingTourStepProvider) !=
-                    MatchingTourStep.awaitingCompatibilityDemo) {
-                  return;
-                }
-                final epoch = ref.read(tourEpochProvider);
-                late VoidCallback finishListener;
-                finishListener = () {
-                  // Deferred: showcaseview invokes these with `for (final cb in
-                  // _onFinishCallbacks)`, and mutating that list inside a callback throws
-                  // ConcurrentModificationError on the next moveNext(), silently skipping
-                  // every callback after this one — including the tour's own listener.
-                  scheduleMicrotask(
-                    () => ShowcaseView.get().removeOnFinishCallback(
-                      finishListener,
-                    ),
-                  );
-                  if (!mounted) return;
-                  if (ref.read(tourEpochProvider) != epoch) return;
-                  ref.read(matchingTourStepProvider.notifier).state =
-                      MatchingTourStep.awaitingViewProfileTap;
-                };
-                ShowcaseView.get().addOnFinishCallback(finishListener);
-                ShowcaseView.get().startShowCase([
-                  _compatibilityShowcaseKey,
-                  _chatShowcaseKey,
-                  profileExplanationTourShowcaseKey,
-                ]);
-              });
-            }
-
-            final showViewProfileTourStep =
-                filtered.isNotEmpty &&
-                tourStep == MatchingTourStep.awaitingViewProfileTap;
-            if (!showViewProfileTourStep) {
-              _viewProfileTourSequenceKicked = false;
-            }
-            if (showViewProfileTourStep && !_viewProfileTourSequenceKicked) {
-              _viewProfileTourSequenceKicked = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!mounted || ShowcaseView.get().isShowcaseRunning) return;
-                if (ref.read(matchingTourStepProvider) !=
-                    MatchingTourStep.awaitingViewProfileTap) {
-                  return;
-                }
-                ShowcaseView.get().startShowCase([
-                  viewProfileTapTourShowcaseKey,
-                ]);
-              });
             }
 
             return CustomScrollView(
@@ -228,12 +145,18 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        AppSearchField(
-                          controller: _searchController,
-                          hintText: l10n.matchesSearchHint,
-                          onChanged: (value) => setState(
-                            () => _filters = _filters!.copyWith(
-                              searchQuery: value,
+                        TourShowcase(
+                          showcaseKey: _matchesPageShowcaseKey,
+                          title: l10n.tourMatchesIntroTitle,
+                          description: l10n.tourMatchesIntroDescription,
+                          hidePrevious: true,
+                          child: AppSearchField(
+                            controller: _searchController,
+                            hintText: l10n.matchesSearchHint,
+                            onChanged: (value) => setState(
+                              () => _filters = _filters!.copyWith(
+                                searchQuery: value,
+                              ),
                             ),
                           ),
                         ),
@@ -328,7 +251,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                           ),
                           onMessage: () => _openChat(candidate),
                           compatibilityBadgeWrapper: index == 0
-                              ? (child) => mainMatchTour
+                              ? (child) => showMatchesGuide
                                     ? TourShowcase(
                                         showcaseKey: _compatibilityShowcaseKey,
                                         title: l10n.tourCompatibilityTitle,
@@ -346,7 +269,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                                       )
                                     : child
                               : null,
-                          messageButtonWrapper: index == 0 && mainMatchTour
+                          messageButtonWrapper: index == 0 && showMatchesGuide
                               ? (child) => TourShowcase(
                                   showcaseKey: _chatShowcaseKey,
                                   title: l10n.tourChatTitle,
@@ -354,44 +277,15 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                                   child: child,
                                 )
                               : null,
-                          viewProfileButtonWrapper: index == 0
-                              ? (child) {
-                                  if (mainMatchTour) {
-                                    return TourShowcase(
-                                      showcaseKey:
-                                          profileExplanationTourShowcaseKey,
-                                      title: l10n.tourStudentProfileTitle,
-                                      description:
-                                          l10n.tourStudentProfileDescription,
-                                      child: child,
-                                    );
-                                  }
-                                  if (showViewProfileTourStep) {
-                                    return GuidedTapShowcase(
-                                      showcaseKey:
-                                          viewProfileTapTourShowcaseKey,
-                                      title: l10n.tourStudentProfileTitle,
-                                      description: l10n.tourTapToContinue,
-                                      onTap: () {
-                                        ref
-                                            .read(
-                                              matchingTourStepProvider.notifier,
-                                            )
-                                            .state = MatchingTourStep
-                                            .awaitingReportDemo;
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => MatchProfileScreen(
-                                              candidate: candidate,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: child,
-                                    );
-                                  }
-                                  return child;
-                                }
+                          viewProfileButtonWrapper:
+                              index == 0 && showMatchesGuide
+                              ? (child) => TourShowcase(
+                                  showcaseKey: profileExplanationTourShowcaseKey,
+                                  title: l10n.tourStudentProfileTitle,
+                                  description:
+                                      l10n.tourStudentProfileDescription,
+                                  child: child,
+                                )
                               : null,
                         );
                       },

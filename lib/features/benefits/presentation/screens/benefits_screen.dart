@@ -46,6 +46,8 @@ class _BenefitsScreenState extends ConsumerState<BenefitsScreen> {
   final _statusShowcaseKey = GlobalKey();
   final _walletTapShowcaseKey = GlobalKey();
   final _walletContentShowcaseKey = GlobalKey();
+  bool _catalogGuide = false;
+  bool _walletGuide = false;
   bool _benefitsTourKicked = false;
   bool _walletTourKicked = false;
 
@@ -122,126 +124,63 @@ class _BenefitsScreenState extends ConsumerState<BenefitsScreen> {
     // Benefits step's targets.
     dismissPushedRoutesOnTourReplay(context, ref);
 
-    final tourStep = ref.watch(matchingTourStepProvider);
-    final showBenefitsTour =
-        tourStep == MatchingTourStep.awaitingBenefitsContent;
-    final showWalletTap = tourStep == MatchingTourStep.awaitingWalletTap;
-    final showWalletTour = tourStep == MatchingTourStep.awaitingWalletContent;
-    // Same reset as matches/scan: these States survive a tour replay, so a
-    // one-shot flag would skip the step silently on the second run.
-    if (!showBenefitsTour) _benefitsTourKicked = false;
-    if (!showWalletTour) _walletTourKicked = false;
+    // The guide explains whichever segment is already open. It does not
+    // switch between the catalog and the wallet, and it does not leave
+    // the Benefits tab.
+    if (!_catalogGuide) _benefitsTourKicked = false;
+    if (!_walletGuide) _walletTourKicked = false;
 
-    void openWalletFromTour() {
+    ref.listen(tabGuideRequestProvider, (previous, next) {
+      if (next != TabGuideTarget.benefits) return;
+      ref.read(tabGuideRequestProvider.notifier).state = null;
+      setState(() {
+        _catalogGuide = _tab == _BenefitsTab.catalog;
+        _walletGuide = _tab == _BenefitsTab.wallet;
+        _benefitsTourKicked = false;
+        _walletTourKicked = false;
+      });
+    });
+
+    void openWallet() {
+      if (_catalogGuide || _walletGuide) return;
       setState(() => _tab = _BenefitsTab.wallet);
-      if (showBenefitsTour || showWalletTap) {
-        ref.read(matchingTourStepProvider.notifier).state =
-            MatchingTourStep.awaitingWalletContent;
-      }
     }
 
-    if (showBenefitsTour && _tab != _BenefitsTab.catalog) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _tab != _BenefitsTab.catalog) {
-          setState(() => _tab = _BenefitsTab.catalog);
-        }
-      });
-    } else if (showBenefitsTour && benefitsReady && !_benefitsTourKicked) {
+    if (_catalogGuide && benefitsReady && !_benefitsTourKicked) {
+      _benefitsTourKicked = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 300));
-        if (!mounted) return;
-        if (ref.read(matchingTourStepProvider) !=
-            MatchingTourStep.awaitingBenefitsContent) {
+        for (var i = 0; i < 10; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+          if (!mounted || !_catalogGuide) return;
+          final targetsReady =
+              ShowcaseView.get().isTargetRendered(_catalogShowcaseKey) &&
+              ShowcaseView.get().isTargetRendered(_statusShowcaseKey) &&
+              ShowcaseView.get().isTargetRendered(_walletTapShowcaseKey);
+          if (!targetsReady) continue;
+          ShowcaseView.get().startShowCase([
+            _catalogShowcaseKey,
+            _statusShowcaseKey,
+            _walletTapShowcaseKey,
+          ]);
           return;
-        }
-
-        // Wait until all Benefits tour targets are actually mounted.
-        // The catalog is loaded asynchronously, so these keys may not
-        // exist yet on the first frame after navigating to Benefits.
-        // `GlobalKey.currentContext` doesn't work here — in showcaseview
-        // v5.x a GlobalKey passed to `Showcase` is only a registry id and
-        // is never attached to the widget's Element, so `currentContext`
-        // is always null; `isTargetRendered` checks the package's own
-        // registry instead.
-        final targetsReady =
-            ShowcaseView.get().isTargetRendered(_catalogShowcaseKey) &&
-            ShowcaseView.get().isTargetRendered(_statusShowcaseKey) &&
-            ShowcaseView.get().isTargetRendered(_walletTapShowcaseKey);
-
-        if (!targetsReady) {
-          // Do not mark the tour as started yet.
-          // When the benefits data finishes loading, the screen rebuilds
-          // and this block will try again.
-          return;
-        }
-        _benefitsTourKicked = true;
-        ShowcaseView.get().startShowCase([
-          _catalogShowcaseKey,
-          _statusShowcaseKey,
-          _walletTapShowcaseKey,
-        ]);
-      });
-    }
-    if (showWalletTour && _tab != _BenefitsTab.wallet) {
-      // Resuming straight onto this step after a refresh lands here with
-      // the tab still defaulted to catalog — force it over, same as the
-      // benefits-content step above forces catalog.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _tab != _BenefitsTab.wallet) {
-          setState(() => _tab = _BenefitsTab.wallet);
         }
       });
     }
-    if (showWalletTour && _tab == _BenefitsTab.wallet && !_walletTourKicked) {
-      _walletTourKicked = true;
+    if (_walletGuide && _tab == _BenefitsTab.wallet && !_walletTourKicked) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        final epoch = ref.read(tourEpochProvider);
-        if (ref.read(matchingTourStepProvider) !=
-            MatchingTourStep.awaitingWalletContent) {
+        if (!mounted || !_walletGuide || _walletTourKicked) return;
+        if (!ShowcaseView.get().isTargetRendered(_walletContentShowcaseKey)) {
           return;
         }
-        late VoidCallback finishListener;
-        finishListener = () {
-          // Deferred: showcaseview invokes these with `for (final cb in
-          // _onFinishCallbacks)`, and mutating that list inside a callback throws
-          // ConcurrentModificationError on the next moveNext(), silently skipping
-          // every callback after this one — including the tour's own listener.
-          scheduleMicrotask(
-            () => ShowcaseView.get().removeOnFinishCallback(finishListener),
-          );
-          if (!mounted) return;
-          if (ref.read(tourEpochProvider) != epoch) return;
-          ref.read(matchingTourStepProvider.notifier).state =
-              MatchingTourStep.awaitingProfileTab;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) return;
-            if (ref.read(tourEpochProvider) != epoch) return;
-            late VoidCallback profileFinishListener;
-            profileFinishListener = () {
-              // Deferred: showcaseview invokes these with `for (final cb in
-              // _onFinishCallbacks)`, and mutating that list inside a callback throws
-              // ConcurrentModificationError on the next moveNext(), silently skipping
-              // every callback after this one — including the tour's own listener.
-              scheduleMicrotask(
-                () => ShowcaseView.get().removeOnFinishCallback(
-                  profileFinishListener,
-                ),
-              );
-              if (ref.read(tourEpochProvider) != epoch) return;
-              ref.read(matchingTourStepProvider.notifier).state =
-                  MatchingTourStep.none;
-            };
-            ShowcaseView.get().addOnFinishCallback(profileFinishListener);
-            ShowcaseView.get().startShowCase([profileTabTourShowcaseKey]);
-          });
-        };
-        ShowcaseView.get().addOnFinishCallback(finishListener);
+        _walletTourKicked = true;
         ShowcaseView.get().startShowCase([_walletContentShowcaseKey]);
       });
     }
     return Scaffold(
-      appBar: AppHeaderBar(title: l10n.navBenefits),
+      appBar: AppHeaderBar(
+        title: l10n.navBenefits,
+        onOpenGuide: () => requestTabGuide(ref, TabGuideTarget.benefits),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -263,10 +202,7 @@ class _BenefitsScreenState extends ConsumerState<BenefitsScreen> {
                       ),
                     ],
                     onChanged: (tab) {
-                      if (showBenefitsTour || showWalletTap || showWalletTour) {
-                        return;
-                      }
-
+                      if (_catalogGuide || _walletGuide) return;
                       setState(() => _tab = tab);
                     },
                   ),
@@ -280,13 +216,13 @@ class _BenefitsScreenState extends ConsumerState<BenefitsScreen> {
                       points: points ?? 0,
                       redeemingBenefitId: _redeemingBenefitId,
                       onRedeem: (b) => _redeem(b, l10n),
-                      onOpenWallet: openWalletFromTour,
-                      tourActive: showBenefitsTour || showWalletTap,
+                      onOpenWallet: openWallet,
+                      tourActive: _catalogGuide,
                       catalogShowcaseKey: _catalogShowcaseKey,
                       statusShowcaseKey: _statusShowcaseKey,
                       walletShowcaseKey: _walletTapShowcaseKey,
                     )
-                  : (showWalletTour
+                  : (_walletGuide
                         ? TourShowcase(
                             showcaseKey: _walletContentShowcaseKey,
                             title: l10n.tourWalletTitle,
@@ -1141,10 +1077,7 @@ class _CatalogStatusBanner extends StatelessWidget {
                 ? TourShowcase(
                     showcaseKey: walletShowcaseKey,
                     title: l10n.tourWalletTitle,
-                    description: l10n.tourWalletTapDescription,
-                    hideNext: true,
-                    onTargetClick: onOpenWallet,
-                    disposeOnTap: true,
+                    description: l10n.tourWalletDescription,
                     child: OutlinedButton.icon(
                       onPressed: onOpenWallet,
                       style: OutlinedButton.styleFrom(

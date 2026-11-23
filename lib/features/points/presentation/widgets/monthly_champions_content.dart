@@ -15,10 +15,26 @@ import 'champions_podium.dart';
 import 'my_rank_card.dart';
 
 class MonthlyChampionsContent extends ConsumerWidget {
-  MonthlyChampionsContent({super.key});
+  MonthlyChampionsContent({super.key, this.guideShowcaseKey});
+
+  /// When set, the champions header (or the empty message) is a guide step.
+  /// The guide does not switch back to the scan segment.
+  final GlobalKey? guideShowcaseKey;
 
   /// Stable for the lifetime of this widget instance.
   final _rankCardShowcaseKey = GlobalKey();
+
+  Widget _guideWrap(AppLocalizations l10n, Widget child) {
+    final key = guideShowcaseKey;
+    if (key == null) return child;
+    return TourShowcase(
+      showcaseKey: key,
+      title: l10n.tourChampionsTitle,
+      description: l10n.tourChampionsDescription,
+      hidePrevious: true,
+      child: child,
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,9 +43,12 @@ class MonthlyChampionsContent extends ConsumerWidget {
     final viewerId = ref.watch(currentAuthSessionProvider).userId ?? '';
 
     return dataAsync.when(
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(vertical: 60),
-        child: Center(child: CircularProgressIndicator()),
+      loading: () => _guideWrap(
+        l10n,
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 60),
+          child: Center(child: CircularProgressIndicator()),
+        ),
       ),
       error: (error, stackTrace) => Padding(
         padding: const EdgeInsets.all(24),
@@ -38,12 +57,15 @@ class MonthlyChampionsContent extends ConsumerWidget {
       data: (data) {
         final leaderboard = data.leaderboard;
         if (leaderboard.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.all(24),
-            child: Center(
-              child: Text(
-                l10n.championsEmpty,
-                style: const TextStyle(color: AppColors.mutedForeground),
+          return _guideWrap(
+            l10n,
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Text(
+                  l10n.championsEmpty,
+                  style: const TextStyle(color: AppColors.mutedForeground),
+                ),
               ),
             ),
           );
@@ -84,7 +106,7 @@ class MonthlyChampionsContent extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _ChampionsHero(l10n: l10n),
+            _guideWrap(l10n, _ChampionsHero(l10n: l10n)),
             const SizedBox(height: 16),
             // Reference layout: rank card beside the podium where there's room,
             // stacked on narrow phones so neither gets squeezed.

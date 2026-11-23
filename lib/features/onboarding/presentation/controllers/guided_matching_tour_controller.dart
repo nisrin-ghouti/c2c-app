@@ -48,14 +48,21 @@ final matchingTourStepProvider = StateProvider<MatchingTourStep>(
   (ref) => MatchingTourStep.none,
 );
 
-/// Set by Settings → Replay step-by-step guide before the Home "seen" flag
-/// is cleared.
+/// The root tab whose guide the student just opened.
 ///
-/// Signing in still shows the "you're signed in" dialog, then enters the app.
-/// That dialog no longer starts the coach marks. Replay is the path that does,
-/// and Home reads this so it can tell the two apart: clearing the seen flag
-/// alone would show the sign-in dialog again and dismiss straight into the app.
-final tourReplayRequestedProvider = StateProvider<bool>((ref) => false);
+/// Each tab starts only the steps that are already on that screen. Nothing
+/// in this flow switches tabs or pushes another route.
+enum TabGuideTarget { home, matches, scan, benefits, profile }
+
+final tabGuideRequestProvider = StateProvider<TabGuideTarget?>((ref) => null);
+
+void requestTabGuide(WidgetRef ref, TabGuideTarget target) {
+  final view = ShowcaseView.get();
+  if (view.isShowcaseRunning) view.dismiss();
+  // Clear first so opening the same tab's guide again still notifies.
+  ref.read(tabGuideRequestProvider.notifier).state = null;
+  ref.read(tabGuideRequestProvider.notifier).state = target;
+}
 
 /// Bumped by [closeMainTour]. Segment listeners capture the value when they
 /// register and ignore a later finish if it has changed.
@@ -80,6 +87,9 @@ void closeMainTour(ProviderContainer container) {
   container.read(matchingTourStepProvider.notifier).state =
       MatchingTourStep.none;
   container.read(homeCoachMarkControllerProvider.notifier).markSeen();
+  // The floating accessibility spotlight starts itself once the Home flag
+  // is seen. Closing a guide should not be followed by another spotlight.
+  container.read(demoFlagsControllerProvider).markSeen(DemoKey.accessibility);
   container.read(appPreferencesProvider).setTourResumeStep(null);
 }
 

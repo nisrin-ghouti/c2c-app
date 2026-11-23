@@ -12,12 +12,21 @@ import 'app_logo.dart';
 /// Matches, Scanning & Points, and Monthly Champions — kept as one widget
 /// so all three stay visually identical instead of drifting apart.
 class AppHeaderBar extends ConsumerWidget implements PreferredSizeWidget {
-  const AppHeaderBar({super.key, required this.title, this.leading});
+  const AppHeaderBar({
+    super.key,
+    required this.title,
+    this.leading,
+    this.onOpenGuide,
+  });
 
   final String title;
 
   /// Optional leading widget (e.g. a "back" link on Monthly Champions).
   final Widget? leading;
+
+  /// Opens the guide for the tab this header belongs to. Omitted on screens
+  /// that are not a root tab, so the button does not appear there.
+  final VoidCallback? onOpenGuide;
 
   static void showComingSoon(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -42,6 +51,12 @@ class AppHeaderBar extends ConsumerWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: true,
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
       actions: [
+        if (onOpenGuide != null)
+          IconButton(
+            tooltip: l10n.tabGuideAction,
+            onPressed: onOpenGuide,
+            icon: const Icon(Icons.help_outline),
+          ),
         // Tapping the logo always returns to Home — `go` (not `push`) so it
         // switches the bottom-nav branch rather than stacking a second Home
         // on top of the current tab.

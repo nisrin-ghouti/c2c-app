@@ -13,7 +13,6 @@ import '../../../events/presentation/controllers/event_scan_controller.dart';
 import '../../../home/presentation/controllers/home_controller.dart';
 import '../../../onboarding/domain/entities/demo_key.dart';
 import '../../../onboarding/presentation/controllers/demo_flags_controller.dart';
-import '../../../onboarding/presentation/controllers/guided_matching_tour_controller.dart';
 import '../../../onboarding/presentation/widgets/contextual_showcase.dart';
 import '../../../profile/presentation/providers/profile_providers.dart';
 
@@ -28,7 +27,11 @@ import '../../../profile/presentation/providers/profile_providers.dart';
 /// exchange still only lives inside a scheduled meeting's own Meeting
 /// Screen (`matches/presentation/screens/meeting_screen.dart`).
 class ScanCard extends ConsumerStatefulWidget {
-  const ScanCard({super.key});
+  const ScanCard({super.key, this.guideActive = false});
+
+  /// The Scan tab's guide is open. Explains the camera and student number
+  /// that are already on this card, and does not leave the tab.
+  final bool guideActive;
 
   @override
   ConsumerState<ScanCard> createState() => _ScanCardState();
@@ -125,46 +128,23 @@ class _ScanCardState extends ConsumerState<ScanCard>
     final l10n = AppLocalizations.of(context);
     final scanState = ref.watch(eventScanControllerProvider);
 
-    final mainScanTour =
-        ref.watch(matchingTourStepProvider) ==
-        MatchingTourStep.awaitingScanContent;
-    if (!mainScanTour) _mainScanTourKicked = false;
+    final guideActive = widget.guideActive;
+    if (!guideActive) _mainScanTourKicked = false;
     final eventCheckInSeen = ref.watch(
       hasSeenDemoProvider(DemoKey.eventCheckIn),
     );
 
-    if (mainScanTour && !_mainScanTourKicked) {
+    if (guideActive && !_mainScanTourKicked) {
       _mainScanTourKicked = true;
       ref.read(demoFlagsControllerProvider).markSeen(DemoKey.eventCheckIn);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        final container = ProviderScope.containerOf(context, listen: false);
-        final epoch = container.read(tourEpochProvider);
-        if (!mainTourStillCurrent(container, epoch)) return;
-        late VoidCallback finishListener;
-        finishListener = () {
-          // Deferred: showcaseview invokes these with `for (final cb in
-          // _onFinishCallbacks)`, and mutating that list inside a callback throws
-          // ConcurrentModificationError on the next moveNext(), silently skipping
-          // every callback after this one — including the tour's own listener.
-          scheduleMicrotask(
-            () => ShowcaseView.get().removeOnFinishCallback(finishListener),
-          );
-          if (!mainTourStillCurrent(container, epoch)) return;
-          container.read(matchingTourStepProvider.notifier).state =
-              MatchingTourStep.awaitingBenefitsTab;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mainTourStillCurrent(container, epoch)) return;
-            ShowcaseView.get().startShowCase([benefitsTabTourShowcaseKey]);
-          });
-        };
-        ShowcaseView.get().addOnFinishCallback(finishListener);
+        if (!mounted || !widget.guideActive) return;
         ShowcaseView.get().startShowCase([
           _cameraShowcaseKey,
           _studentIdShowcaseKey,
         ]);
       });
-    } else if (!mainScanTour && !eventCheckInSeen) {
+    } else if (!guideActive && !eventCheckInSeen) {
       startContextualDemoOnce(
         context: context,
         ref: ref,
@@ -232,7 +212,7 @@ class _ScanCardState extends ConsumerState<ScanCard>
               l10n: l10n,
               onDetect: (capture) => _handleDetect(capture, l10n),
               onScanAnother: () => setState(() => _successResult = null),
-              viewfinderWrapper: (child) => mainScanTour
+              viewfinderWrapper: (child) => guideActive
                   ? TourShowcase(
                       showcaseKey: _cameraShowcaseKey,
                       title: l10n.tourScanCameraTitle,

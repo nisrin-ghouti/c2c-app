@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../../../core/widgets/app_header_bar.dart';
@@ -27,6 +28,20 @@ class ScanningScreen extends ConsumerStatefulWidget {
 
 class _ScanningScreenState extends ConsumerState<ScanningScreen> {
   ScanningTab _tab = ScanningTab.scan;
+  bool _scanGuide = false;
+  bool _championsGuide = false;
+  final _championsGuideKey = GlobalKey();
+
+  Future<void> _startChampionsGuide() async {
+    for (var i = 0; i < 15; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      if (!mounted || !_championsGuide) return;
+      if (ShowcaseView.get().isTargetRendered(_championsGuideKey)) {
+        ShowcaseView.get().startShowCase([_championsGuideKey]);
+        return;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,19 +49,22 @@ class _ScanningScreenState extends ConsumerState<ScanningScreen> {
 
     dismissPushedRoutesOnTourReplay(context, ref);
 
-    final mainScanTour =
-        ref.watch(matchingTourStepProvider) ==
-        MatchingTourStep.awaitingScanContent;
-
-    // The first-run tour must always land on the Scan content, even if this
-    // persistent branch was previously left on Monthly Champions.
-    if (mainScanTour && _tab != ScanningTab.scan) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _tab != ScanningTab.scan) {
-          setState(() => _tab = ScanningTab.scan);
-        }
+    ref.listen(tabGuideRequestProvider, (previous, next) {
+      if (next != TabGuideTarget.scan) return;
+      ref.read(tabGuideRequestProvider.notifier).state = null;
+      if (_tab == ScanningTab.scan) {
+        setState(() {
+          _scanGuide = true;
+          _championsGuide = false;
+        });
+        return;
+      }
+      setState(() {
+        _scanGuide = false;
+        _championsGuide = true;
       });
-    }
+      _startChampionsGuide();
+    });
 
     // Honour a pending tab request (from Home), then clear it so a later manual
     // visit keeps whatever tab the user last chose. Done in a post-frame
@@ -61,7 +79,10 @@ class _ScanningScreenState extends ConsumerState<ScanningScreen> {
     }
 
     return Scaffold(
-      appBar: AppHeaderBar(title: l10n.scanningTitle),
+      appBar: AppHeaderBar(
+        title: l10n.scanningTitle,
+        onOpenGuide: () => requestTabGuide(ref, TabGuideTarget.scan),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -84,13 +105,17 @@ class _ScanningScreenState extends ConsumerState<ScanningScreen> {
               ),
               const SizedBox(height: 16),
               if (_tab == ScanningTab.scan) ...[
-                const ScanCard(),
+                ScanCard(guideActive: _scanGuide),
                 const SizedBox(height: 20),
                 const PointsHistorySection(),
                 const SizedBox(height: 20),
                 const HowToEarnPanel(),
               ] else
-                MonthlyChampionsContent(),
+                MonthlyChampionsContent(
+                  guideShowcaseKey: _championsGuide
+                      ? _championsGuideKey
+                      : null,
+                ),
             ],
           ),
         ),

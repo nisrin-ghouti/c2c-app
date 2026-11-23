@@ -2336,7 +2336,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tourIntroDescription =>
-      'يمكنكم البدء باستخدام التطبيق. يمكنكم عرض الإرشادات في أي وقت من الإعدادات.';
+      'يمكنكم البدء باستخدام التطبيق. في كل تبويب زر إرشادات يشرح ما يظهر في ذلك التبويب فقط.';
+
+  @override
+  String get tabGuideAction => 'إرشادات';
 
   @override
   String get tourNextAction => 'التالي';
