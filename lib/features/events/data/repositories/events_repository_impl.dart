@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import '../../domain/entities/acceptance_mode.dart';
+import '../../domain/entities/audience_group.dart';
 import '../../domain/entities/campus_event.dart';
+import '../../domain/entities/event_visibility_target.dart';
 import '../../domain/entities/program_session_window.dart';
 import '../../domain/entities/event_action_result.dart';
 import '../../domain/entities/event_approval_status.dart';
@@ -408,5 +410,33 @@ class EventsRepositoryImpl implements EventsRepository {
   Future<String?> lookupStudentNameById(String studentId) async {
     final row = await _remote.lookupStudentById(studentId);
     return row?['full_name'] as String?;
+  }
+
+  @override
+  Future<List<AudienceGroup>> listAudienceGroups() async {
+    final rows = await _remote.listAudienceGroups();
+    return rows
+        .map(
+          (row) => AudienceGroup(
+            id: row['id'] as String,
+            name: row['name'] as String? ?? '',
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<EventVisibilityTarget>> getEventVisibilityTargets(
+    String eventId,
+  ) async {
+    final rows = await _remote.getEventVisibilityTargets(eventId);
+    return rows
+        .map(
+          (row) => EventVisibilityTarget(
+            type: row['target_type'] as String,
+            value: row['target_value'] as String,
+          ),
+        )
+        .toList();
   }
 }

@@ -848,7 +848,15 @@ class AppLocalizationsHe extends AppLocalizations {
   String get eventFormFacultiesLabel => 'בחירת פקולטות';
 
   @override
-  String get eventFormGroupTagsLabel => 'תגיות קבוצה (מופרדות בפסיקים)';
+  String get eventFormGroupTagsLabel => 'קבוצות מותאמות אישית';
+
+  @override
+  String get eventFormGroupsEmpty =>
+      'אין עדיין קבוצות. צרו אחת מתפריט המארח, ואז בחרו אותה כאן.';
+
+  @override
+  String get eventFormGroupsRequired =>
+      'בחרו לפחות קבוצה אחת, או בחרו נראות אחרת.';
 
   @override
   String get eventFormErrorTitleRequired => 'הזן/י כותרת';

@@ -851,7 +851,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get eventFormFacultiesLabel => 'اختر الكليات';
 
   @override
-  String get eventFormGroupTagsLabel => 'وسوم المجموعة (مفصولة بفواصل)';
+  String get eventFormGroupTagsLabel => 'مجموعات مخصصة';
+
+  @override
+  String get eventFormGroupsEmpty =>
+      'لا توجد مجموعات بعد. أنشئ واحدة من قائمة المضيف، ثم اخترها هنا.';
+
+  @override
+  String get eventFormGroupsRequired =>
+      'اختر مجموعة واحدة على الأقل، أو اختر ظهورًا مختلفًا.';
 
   @override
   String get eventFormErrorTitleRequired => 'أدخل عنوانًا';

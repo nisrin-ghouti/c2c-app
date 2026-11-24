@@ -866,7 +866,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventFormFacultiesLabel => 'Select faculties';
 
   @override
-  String get eventFormGroupTagsLabel => 'Group tags (comma separated)';
+  String get eventFormGroupTagsLabel => 'Personalised groups';
+
+  @override
+  String get eventFormGroupsEmpty =>
+      'No groups yet. Create one from the host menu, then choose it here.';
+
+  @override
+  String get eventFormGroupsRequired =>
+      'Choose at least one group, or pick a different visibility.';
 
   @override
   String get eventFormErrorTitleRequired => 'Enter a title';

@@ -427,4 +427,19 @@ class EventsRemoteDataSource {
         .upload(path, file, fileOptions: const FileOptions(upsert: true));
     return _client.storage.from('event-images').getPublicUrl(path);
   }
+
+  Future<List<Map<String, dynamic>>> listAudienceGroups() async {
+    final result = await _client.rpc('list_audience_groups');
+    return List<Map<String, dynamic>>.from(result as List? ?? const []);
+  }
+
+  Future<List<Map<String, dynamic>>> getEventVisibilityTargets(
+    String eventId,
+  ) async {
+    final result = await _client.rpc(
+      'admin_get_event_visibility_targets',
+      params: {'_event_id': eventId},
+    );
+    return List<Map<String, dynamic>>.from(result as List? ?? const []);
+  }
 }

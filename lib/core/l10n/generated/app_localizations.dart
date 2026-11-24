@@ -1687,8 +1687,20 @@ abstract class AppLocalizations {
   /// No description provided for @eventFormGroupTagsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Group tags (comma separated)'**
+  /// **'Personalised groups'**
   String get eventFormGroupTagsLabel;
+
+  /// No description provided for @eventFormGroupsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups yet. Create one from the host menu, then choose it here.'**
+  String get eventFormGroupsEmpty;
+
+  /// No description provided for @eventFormGroupsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose at least one group, or pick a different visibility.'**
+  String get eventFormGroupsRequired;
 
   /// No description provided for @eventFormErrorTitleRequired.
   ///

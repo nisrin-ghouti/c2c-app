@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import '../entities/audience_group.dart';
 import '../entities/campus_event.dart';
+import '../entities/event_visibility_target.dart';
 import '../entities/program_session_window.dart';
 import '../entities/event_action_result.dart';
 import '../entities/event_cancel_result.dart';
@@ -148,4 +150,10 @@ abstract interface class EventsRepository {
   /// Statistics screen. "Registered" always reflects the parent program's
   /// registration; "attended"/"missed" are scoped to [sessionId] when given.
   Future<EventStats> getEventStats(String eventId, {String? sessionId});
+
+  /// Groups this host or admin can attach to an event.
+  Future<List<AudienceGroup>> listAudienceGroups();
+
+  /// Faculty, degree, and audience-group rows for an event the caller manages.
+  Future<List<EventVisibilityTarget>> getEventVisibilityTargets(String eventId);
 }

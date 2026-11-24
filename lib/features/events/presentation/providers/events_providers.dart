@@ -69,6 +69,10 @@ final approveEventProvider = Provider(
 final rejectEventProvider = Provider(
   (ref) => RejectEvent(ref.watch(eventsRepositoryProvider)),
 );
+final audienceGroupsProvider = FutureProvider.autoDispose((ref) {
+  return ref.watch(eventsRepositoryProvider).listAudienceGroups();
+});
+
 final getEventSessionsProvider = Provider(
   (ref) => GetEventSessions(ref.watch(eventsRepositoryProvider)),
 );

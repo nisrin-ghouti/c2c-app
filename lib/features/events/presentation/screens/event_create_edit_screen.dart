@@ -79,7 +79,6 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
   bool _uploadingImage = false;
   late final TextEditingController _organizerController;
   late final TextEditingController _capacityController;
-  late final TextEditingController _groupTagsController;
 
   DateTime? _startsAt;
   DateTime? _endsAt;
@@ -91,6 +90,8 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
   late AcceptanceMode _acceptanceMode;
   bool _acceptanceTouched = false;
   final Set<String> _selectedFaculties = {};
+  final Set<String> _selectedDegrees = {};
+  final Set<String> _selectedGroupIds = {};
   final List<_SessionFormRow> _sessions = [];
 
   bool get _isEdit => widget.event != null;
@@ -114,7 +115,6 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
     _capacityController = TextEditingController(
       text: event?.capacity?.toString() ?? '',
     );
-    _groupTagsController = TextEditingController();
     _startsAt = event?.startsAt;
     _endsAt = event?.endsAt;
     _category = event?.category;
@@ -132,6 +132,34 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
             ? AcceptanceMode.approval
             : AcceptanceMode.auto);
     _acceptanceTouched = event != null;
+
+    if (event != null &&
+        (event.visibility == EventVisibility.specificFaculties ||
+            event.visibility == EventVisibility.specificGroups)) {
+      Future.microtask(() async {
+        final targets = await ref
+            .read(eventsRepositoryProvider)
+            .getEventVisibilityTargets(event.id);
+        if (!mounted) return;
+        setState(() {
+          _selectedFaculties.addAll(
+            targets
+                .where((target) => target.type == 'faculty')
+                .map((target) => target.value),
+          );
+          _selectedDegrees.addAll(
+            targets
+                .where((target) => target.type == 'degree')
+                .map((target) => target.value),
+          );
+          _selectedGroupIds.addAll(
+            targets
+                .where((target) => target.type == 'audience_group')
+                .map((target) => target.value),
+          );
+        });
+      });
+    }
 
     if (event != null && event.eventKind == EventKind.program) {
       Future.microtask(() async {
@@ -163,7 +191,6 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
     _pointsController.dispose();
     _organizerController.dispose();
     _capacityController.dispose();
-    _groupTagsController.dispose();
     for (final session in _sessions) {
       session.dispose();
     }
@@ -207,6 +234,13 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
 
   Future<void> _submit(AppLocalizations l10n) async {
     if (!_formKey.currentState!.validate()) return;
+    if (_visibility == EventVisibility.specificGroups &&
+        _selectedGroupIds.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.eventFormGroupsRequired)));
+      return;
+    }
     if (_startsAt == null || _endsAt == null) {
       ScaffoldMessenger.of(
         context,
@@ -259,16 +293,18 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
     }
 
     final visibilityTargets = <EventVisibilityTarget>[
-      if (_visibility == EventVisibility.specificFaculties)
+      if (_visibility == EventVisibility.specificFaculties) ...[
         ..._selectedFaculties.map(
           (f) => EventVisibilityTarget(type: 'faculty', value: f),
         ),
+        ..._selectedDegrees.map(
+          (d) => EventVisibilityTarget(type: 'degree', value: d),
+        ),
+      ],
       if (_visibility == EventVisibility.specificGroups)
-        ..._groupTagsController.text
-            .split(',')
-            .map((t) => t.trim())
-            .where((t) => t.isNotEmpty)
-            .map((t) => EventVisibilityTarget(type: 'group_tag', value: t)),
+        ..._selectedGroupIds.map(
+          (id) => EventVisibilityTarget(type: 'audience_group', value: id),
+        ),
     ];
 
     final draft = EventDraft(
@@ -632,9 +668,38 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
               ],
               if (_visibility == EventVisibility.specificGroups) ...[
                 const SizedBox(height: 12),
-                AuthTextField(
-                  controller: _groupTagsController,
-                  label: l10n.eventFormGroupTagsLabel,
+                Text(
+                  l10n.eventFormGroupTagsLabel,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const SizedBox(height: 8),
+                ref.watch(audienceGroupsProvider).when(
+                  loading: () => const CircularProgressIndicator(),
+                  error: (_, _) => Text(l10n.eventFormGroupsEmpty),
+                  data: (groups) {
+                    if (groups.isEmpty) {
+                      return Text(l10n.eventFormGroupsEmpty);
+                    }
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final group in groups)
+                          FilterChip(
+                            label: Text(group.name),
+                            selected: _selectedGroupIds.contains(group.id),
+                            showCheckmark: false,
+                            onSelected: (next) => setState(() {
+                              if (next) {
+                                _selectedGroupIds.add(group.id);
+                              } else {
+                                _selectedGroupIds.remove(group.id);
+                              }
+                            }),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ],
               if (formState.errorMessage != null) ...[
