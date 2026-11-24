@@ -8,7 +8,6 @@ import '../../../../core/widgets/filter_chip_row.dart';
 import '../../../../core/widgets/inline_banner.dart';
 import '../../domain/entities/campus_event.dart';
 import '../../domain/entities/event_cancel_result.dart';
-import '../../domain/entities/event_kind.dart';
 import '../controllers/event_actions_controller.dart';
 import '../../../matches/presentation/providers/scheduled_meeting_providers.dart';
 import '../../../matches/presentation/screens/meeting_screen.dart';
@@ -241,14 +240,11 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
                           canManage: false,
                           registerBusy: false,
                           // Same rule as the events list and the detail
-                          // screen: applied to a program but not yet accepted
-                          // is "awaiting approval", not "Registered".
-                          awaitingApproval:
-                              event.eventKind == EventKind.program &&
-                              event.registrationStatus ==
-                                  EventRegistrationStatus.registered &&
-                              acceptedProgramIds != null &&
-                              !acceptedProgramIds.contains(event.id),
+                          // screen: registered for an event that requires
+                          // approval, but not yet accepted.
+                          awaitingApproval: event.isAwaitingAcceptance(
+                            acceptedProgramIds,
+                          ),
                           tone: _toneFor(event),
                           statusMessage: _messageFor(event, l10n),
                           onTap: () => Navigator.of(context).push(

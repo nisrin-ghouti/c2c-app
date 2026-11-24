@@ -408,12 +408,9 @@ class _EventListScreenState extends ConsumerState<EventListScreen> {
                           isFull: registrationBlocked(event, registrationCounts),
                           // Same rule the detail screen applies, so the card
                           // and the screen it opens can't disagree.
-                          awaitingApproval:
-                              event.eventKind == EventKind.program &&
-                              event.registrationStatus ==
-                                  EventRegistrationStatus.registered &&
-                              acceptedProgramIds != null &&
-                              !acceptedProgramIds.contains(event.id),
+                          awaitingApproval: event.isAwaitingAcceptance(
+                            acceptedProgramIds,
+                          ),
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => EventDetailScreen(event: event),
@@ -431,7 +428,9 @@ class _EventListScreenState extends ConsumerState<EventListScreen> {
                                 .register(event.id);
                             if (!context.mounted) return;
                             final message = switch (result) {
-                              EventActionResult.ok => l10n.registerSuccess,
+                              EventActionResult.ok => event.requiresApproval
+                                  ? l10n.registerPendingApproval
+                                  : l10n.registerSuccess,
                               EventActionResult.alreadyRegistered =>
                                 l10n.registerErrorAlready,
                               EventActionResult.full => l10n.registerErrorFull,

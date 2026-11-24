@@ -1,28 +1,22 @@
+import 'package:c2c/features/events/domain/entities/acceptance_mode.dart';
 import 'package:c2c/features/events/domain/entities/campus_event.dart';
 import 'package:c2c/features/events/domain/entities/event_kind.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// The rule `EventDetailScreen` uses to decide whether a program registration
-/// is still waiting for an organizer to accept it.
-///
-/// Mirrored here rather than reached through the widget because it is the
-/// decision that matters and it has four inputs: the kind, the registration
-/// status, whether the backend's accepted list has loaded, and whether this
-/// event is in it. The screen must agree with this — if the expression there
-/// changes, this test is the thing that says so.
+/// The rule `EventDetailScreen` uses to decide whether a registration is
+/// still waiting for an organizer to accept it. The screen calls
+/// [CampusEvent.isAwaitingAcceptance]; this test is that rule.
 bool awaitingProgramApproval({
   required CampusEvent event,
   required Set<String>? acceptedProgramIds,
 }) {
-  return event.eventKind == EventKind.program &&
-      event.registrationStatus == EventRegistrationStatus.registered &&
-      acceptedProgramIds != null &&
-      !acceptedProgramIds.contains(event.id);
+  return event.isAwaitingAcceptance(acceptedProgramIds);
 }
 
 CampusEvent _event({
   required EventKind kind,
   required EventRegistrationStatus status,
+  AcceptanceMode? acceptanceMode,
   String id = 'p1',
 }) {
   return CampusEvent(
@@ -35,6 +29,7 @@ CampusEvent _event({
     points: 0,
     createdBy: 'admin',
     eventKind: kind,
+    acceptanceMode: acceptanceMode,
     registrationStatus: status,
   );
 }
@@ -80,13 +75,39 @@ void main() {
       );
     });
 
-    test('a single event never shows the pending state', () {
-      // Single events have no acceptance step at all, so they must not be
-      // caught by the absence of a row in a table that only covers programs.
+    test('an auto-accept one-time event never shows the pending state', () {
       expect(
         awaitingProgramApproval(
           event: _event(
             kind: EventKind.single,
+            status: EventRegistrationStatus.registered,
+          ),
+          acceptedProgramIds: const <String>{},
+        ),
+        isFalse,
+      );
+    });
+
+    test('a one-time event that requires approval, not yet accepted -> pending', () {
+      expect(
+        awaitingProgramApproval(
+          event: _event(
+            kind: EventKind.single,
+            acceptanceMode: AcceptanceMode.approval,
+            status: EventRegistrationStatus.registered,
+          ),
+          acceptedProgramIds: const <String>{},
+        ),
+        isTrue,
+      );
+    });
+
+    test('an auto-accept program is not pending', () {
+      expect(
+        awaitingProgramApproval(
+          event: _event(
+            kind: EventKind.program,
+            acceptanceMode: AcceptanceMode.auto,
             status: EventRegistrationStatus.registered,
           ),
           acceptedProgramIds: const <String>{},

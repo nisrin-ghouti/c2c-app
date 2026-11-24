@@ -1,3 +1,4 @@
+import 'acceptance_mode.dart';
 import 'event_approval_status.dart';
 import 'program_session_window.dart';
 import 'event_kind.dart';
@@ -24,6 +25,7 @@ class CampusEvent {
     this.imageUrl,
     this.description,
     this.eventKind = EventKind.single,
+    this.acceptanceMode,
     this.approvalStatus = EventApprovalStatus.approved,
     this.rejectionReason,
     this.visibility = EventVisibility.everyone,
@@ -70,6 +72,13 @@ class CampusEvent {
   final String? imageUrl;
   final String? description;
   final EventKind eventKind;
+
+  /// Null when the row was loaded without `acceptance_mode`. [resolvedAcceptanceMode]
+  /// then keeps the historical rule: programs wait for an organizer, one-time
+  /// events do not. Distinct from [approvalStatus], which is whether the
+  /// event itself has been published.
+  final AcceptanceMode? acceptanceMode;
+
   final EventApprovalStatus approvalStatus;
   final String? rejectionReason;
   final EventVisibility visibility;
@@ -102,6 +111,26 @@ class CampusEvent {
   /// routinely disagrees with its sessions — one live program has its start
   /// seven weeks AFTER its end, with sessions running between neither. The
   /// sessions are the schedule, so they win whenever they are known.
+  AcceptanceMode get resolvedAcceptanceMode =>
+      acceptanceMode ??
+      (eventKind == EventKind.program
+          ? AcceptanceMode.approval
+          : AcceptanceMode.auto);
+
+  /// Registering only applies. A host or admin still has to accept the student.
+  bool get requiresApproval =>
+      resolvedAcceptanceMode == AcceptanceMode.approval;
+
+  /// Registered for an event that requires approval, and not on its accepted
+  /// list. A null [acceptedIds] means that list has not loaded yet, which is
+  /// treated as "not waiting" so the screen does not flash a pending state.
+  bool isAwaitingAcceptance(Set<String>? acceptedIds) {
+    return requiresApproval &&
+        registrationStatus == EventRegistrationStatus.registered &&
+        acceptedIds != null &&
+        !acceptedIds.contains(id);
+  }
+
   DateTime get effectiveStartsAt => sessionWindow?.firstStartsAt ?? startsAt;
 
   /// When it actually finishes. Same reasoning as [effectiveStartsAt].
@@ -210,6 +239,7 @@ class CampusEvent {
       imageUrl: imageUrl,
       description: description,
       eventKind: eventKind,
+      acceptanceMode: acceptanceMode,
       approvalStatus: approvalStatus ?? this.approvalStatus,
       rejectionReason: rejectionReason,
       visibility: visibility,

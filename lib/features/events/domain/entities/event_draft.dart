@@ -1,3 +1,4 @@
+import 'acceptance_mode.dart';
 import 'event_kind.dart';
 import 'event_session_draft.dart';
 import 'event_visibility.dart';
@@ -24,6 +25,7 @@ class EventDraft {
     this.capacity,
     this.visibilityTargets = const [],
     this.eventKind = EventKind.single,
+    this.acceptanceMode = AcceptanceMode.auto,
     this.sessions = const [],
   });
 
@@ -42,6 +44,8 @@ class EventDraft {
   final int? capacity;
   final List<EventVisibilityTarget> visibilityTargets;
   final EventKind eventKind;
+
+  final AcceptanceMode acceptanceMode;
 
   /// Only meaningful when [eventKind] is `program` — one row per session.
   final List<EventSessionDraft> sessions;
@@ -69,6 +73,7 @@ class EventDraft {
     'capacity': capacity,
     'visibility_targets': visibilityTargets.map((t) => t.toJson()).toList(),
     'event_kind': eventKind.dbValue,
+    'acceptance_mode': acceptanceMode.dbValue,
   };
 
   /// `null` means "don't touch existing sessions" (single events, or a

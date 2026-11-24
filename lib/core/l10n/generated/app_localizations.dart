@@ -1396,6 +1396,36 @@ abstract class AppLocalizations {
   /// **'Program'**
   String get eventTypeProgram;
 
+  /// No description provided for @eventFormAcceptanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Student acceptance'**
+  String get eventFormAcceptanceLabel;
+
+  /// No description provided for @eventFormAcceptanceAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-accept'**
+  String get eventFormAcceptanceAuto;
+
+  /// No description provided for @eventFormAcceptanceApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Requires approval'**
+  String get eventFormAcceptanceApproval;
+
+  /// No description provided for @eventFormAcceptanceHintAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Students who register are accepted immediately.'**
+  String get eventFormAcceptanceHintAuto;
+
+  /// No description provided for @eventFormAcceptanceHintApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Students register first. You choose who is accepted.'**
+  String get eventFormAcceptanceHintApproval;
+
   /// No description provided for @eventFiltersButton.
   ///
   /// In en, this message translates to:
@@ -1773,6 +1803,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You need to register for this event before scanning.'**
   String get eventScanErrorNotRegistered;
+
+  /// No description provided for @eventScanErrorNotAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re registered, but this event still needs approval before you can check in.'**
+  String get eventScanErrorNotAccepted;
 
   /// No description provided for @eventScanErrorInvalid.
   ///

@@ -702,6 +702,22 @@ class AppLocalizationsHe extends AppLocalizations {
   String get eventTypeProgram => 'תוכנית';
 
   @override
+  String get eventFormAcceptanceLabel => 'קבלת סטודנטים';
+
+  @override
+  String get eventFormAcceptanceAuto => 'קבלה אוטומטית';
+
+  @override
+  String get eventFormAcceptanceApproval => 'דורש אישור';
+
+  @override
+  String get eventFormAcceptanceHintAuto => 'סטודנטים שנרשמים מתקבלים מיד.';
+
+  @override
+  String get eventFormAcceptanceHintApproval =>
+      'הסטודנטים נרשמים קודם, ואתם בוחרים את מי לקבל.';
+
+  @override
   String get eventFiltersButton => 'סינון';
 
   @override
@@ -900,6 +916,10 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get eventScanErrorNotRegistered =>
       'עליך להירשם לאירוע זה לפני הסריקה.';
+
+  @override
+  String get eventScanErrorNotAccepted =>
+      'נרשמת, אבל האירוע עדיין דורש אישור לפני שניתן לסמן נוכחות.';
 
   @override
   String get eventScanErrorInvalid => 'קוד QR לא תקין.';

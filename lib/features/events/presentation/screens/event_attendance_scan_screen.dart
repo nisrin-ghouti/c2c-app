@@ -82,6 +82,7 @@ class _EventAttendanceScanScreenState
         EventScanStatus.expired => l10n.eventScanErrorExpired,
         EventScanStatus.alreadyScanned => l10n.eventScanErrorAlreadyScanned,
         EventScanStatus.notRegistered => l10n.eventScanErrorNotRegistered,
+        EventScanStatus.notAccepted => l10n.eventScanErrorNotAccepted,
         EventScanStatus.invalid => l10n.eventScanErrorInvalid,
         EventScanStatus.confirmed => null,
       };

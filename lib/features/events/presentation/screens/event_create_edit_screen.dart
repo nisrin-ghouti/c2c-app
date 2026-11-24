@@ -14,6 +14,7 @@ import '../../../../core/widgets/segmented_toggle.dart';
 import '../../../admin/domain/entities/option_list_item.dart';
 import '../../../admin/domain/entities/option_list_type.dart';
 import '../../../admin/presentation/providers/admin_providers.dart';
+import '../../domain/entities/acceptance_mode.dart';
 import '../../domain/entities/campus_event.dart';
 import '../../domain/entities/event_draft.dart';
 import '../../domain/entities/event_kind.dart';
@@ -87,6 +88,8 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
   late final TextEditingController _externalLinkController;
   late EventVisibility _visibility;
   late EventKind _eventKind;
+  late AcceptanceMode _acceptanceMode;
+  bool _acceptanceTouched = false;
   final Set<String> _selectedFaculties = {};
   final List<_SessionFormRow> _sessions = [];
 
@@ -123,6 +126,12 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
     );
     _visibility = event?.visibility ?? EventVisibility.everyone;
     _eventKind = event?.eventKind ?? EventKind.single;
+    _acceptanceMode =
+        event?.resolvedAcceptanceMode ??
+        (_eventKind == EventKind.program
+            ? AcceptanceMode.approval
+            : AcceptanceMode.auto);
+    _acceptanceTouched = event != null;
 
     if (event != null && event.eventKind == EventKind.program) {
       Future.microtask(() async {
@@ -288,6 +297,7 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
       capacity: int.tryParse(_capacityController.text.trim()),
       visibilityTargets: visibilityTargets,
       eventKind: _eventKind,
+      acceptanceMode: _acceptanceMode,
       sessions: sessionDrafts,
     );
 
@@ -370,7 +380,47 @@ class _EventCreateEditScreenState extends ConsumerState<EventCreateEditScreen> {
                   ),
                 ],
                 value: _eventKind,
-                onChanged: (v) => setState(() => _eventKind = v),
+                onChanged: (v) => setState(() {
+                  _eventKind = v;
+                  if (!_acceptanceTouched) {
+                    _acceptanceMode = v == EventKind.program
+                        ? AcceptanceMode.approval
+                        : AcceptanceMode.auto;
+                  }
+                }),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.eventFormAcceptanceLabel,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              SegmentedToggle<AcceptanceMode>(
+                options: [
+                  SegmentOption(
+                    value: AcceptanceMode.auto,
+                    label: l10n.eventFormAcceptanceAuto,
+                  ),
+                  SegmentOption(
+                    value: AcceptanceMode.approval,
+                    label: l10n.eventFormAcceptanceApproval,
+                  ),
+                ],
+                value: _acceptanceMode,
+                onChanged: (v) => setState(() {
+                  _acceptanceTouched = true;
+                  _acceptanceMode = v;
+                }),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _acceptanceMode == AcceptanceMode.approval
+                    ? l10n.eventFormAcceptanceHintApproval
+                    : l10n.eventFormAcceptanceHintAuto,
+                style: const TextStyle(
+                  color: AppColors.mutedForeground,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 16),
               AuthTextField(

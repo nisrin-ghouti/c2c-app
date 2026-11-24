@@ -8,6 +8,7 @@ enum EventScanStatus {
   expired,
   alreadyScanned,
   notRegistered,
+  notAccepted,
   invalid,
 }
 

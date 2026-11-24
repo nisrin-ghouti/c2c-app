@@ -29,7 +29,7 @@ class EventsRemoteDataSource {
   static const _eventColumns =
       'id, title, description, category, location, starts_at, ends_at, points, image_url, '
       'created_by, organizer_name, organizer_description, external_link, '
-      'event_kind, approval_status, rejection_reason, '
+      'event_kind, acceptance_mode, approval_status, rejection_reason, '
       'visibility, qr_enabled, capacity, registration_closed, '
       'title_ar, title_he, description_ar, description_he, '
       'location_ar, location_he, organizer_name_ar, organizer_name_he, '

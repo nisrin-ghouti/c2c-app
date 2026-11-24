@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../../domain/entities/acceptance_mode.dart';
 import '../../domain/entities/campus_event.dart';
 import '../../domain/entities/program_session_window.dart';
 import '../../domain/entities/event_action_result.dart';
@@ -298,6 +299,7 @@ class EventsRepositoryImpl implements EventsRepository {
       'expired' => EventScanStatus.expired,
       'already_scanned' => EventScanStatus.alreadyScanned,
       'not_registered' => EventScanStatus.notRegistered,
+      'not_accepted' => EventScanStatus.notAccepted,
       _ => EventScanStatus.invalid,
     };
     return EventScanResult(
@@ -338,6 +340,9 @@ class EventsRepositoryImpl implements EventsRepository {
       description: row['description'] as String?,
       eventKind: EventKind.fromDbValue(
         (row['event_kind'] as String?) ?? 'single',
+      ),
+      acceptanceMode: AcceptanceMode.tryParse(
+        row['acceptance_mode'] as String?,
       ),
       approvalStatus: EventApprovalStatus.fromDbValue(
         (row['approval_status'] as String?) ?? 'approved',
@@ -389,6 +394,7 @@ class EventsRepositoryImpl implements EventsRepository {
       'expired' => EventScanStatus.expired,
       'already_scanned' => EventScanStatus.alreadyScanned,
       'not_registered' => EventScanStatus.notRegistered,
+      'not_accepted' => EventScanStatus.notAccepted,
       _ => EventScanStatus.invalid,
     };
     return EventScanResult(

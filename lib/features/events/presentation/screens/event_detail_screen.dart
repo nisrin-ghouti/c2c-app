@@ -59,7 +59,7 @@ class EventDetailScreen extends ConsumerWidget {
       // registered!" there promises something that hasn't happened yet and
       // contradicts the pending status the button then shows.
       EventActionResult.ok =>
-        event.eventKind == EventKind.program
+        event.requiresApproval
             ? l10n.registerPendingApproval
             : l10n.registerSuccess,
       EventActionResult.alreadyRegistered => l10n.registerErrorAlready,
@@ -271,18 +271,14 @@ class EventDetailScreen extends ConsumerWidget {
         capacity: event.capacity,
       );
     }
-    // Awaiting approval = holds a registration for a PROGRAM but is absent
-    // from the backend's accepted list. Single events have no acceptance step,
-    // so they can never be in this state. While the lookup is in flight the
+    // Awaiting approval = holds a registration for an event that requires
+    // acceptance, and is absent from the backend's accepted list. Auto-accept
+    // events can never be in this state. While the lookup is in flight the
     // answer is "not pending", which keeps the existing CTA on screen instead
     // of flashing a status that may not apply.
     final acceptedProgramIds =
         ref.watch(myAcceptedProgramIdsProvider).valueOrNull;
-    final awaitingProgramApproval =
-        event.eventKind == EventKind.program &&
-        event.registrationStatus == EventRegistrationStatus.registered &&
-        acceptedProgramIds != null &&
-        !acceptedProgramIds.contains(event.id);
+    final awaitingAcceptance = event.isAwaitingAcceptance(acceptedProgramIds);
     final acceptedOntoProgram =
         event.eventKind == EventKind.program &&
         (acceptedProgramIds?.contains(event.id) ?? false);
@@ -464,7 +460,7 @@ class EventDetailScreen extends ConsumerWidget {
                   builder: (_) => ProgramDetailScreen(event: event),
                 ),
               ),
-              awaitingProgramApproval: awaitingProgramApproval,
+              awaitingAcceptance: awaitingAcceptance,
               acceptedOntoProgram: acceptedOntoProgram,
               l10n: l10n,
             ),
@@ -615,7 +611,7 @@ class _CtaSection extends StatelessWidget {
     required this.onRegister,
     required this.onScanToCheckIn,
     required this.onViewSessions,
-    required this.awaitingProgramApproval,
+    required this.awaitingAcceptance,
     required this.acceptedOntoProgram,
     required this.l10n,
   });
@@ -629,11 +625,12 @@ class _CtaSection extends StatelessWidget {
   /// plain "registered" banner, which is the state before an organizer acts.
   final bool acceptedOntoProgram;
 
-  /// True when the viewer holds a registration for a program but has not yet
-  /// been accepted onto it. Driven by `myAcceptedProgramIdsProvider` — the
-  /// backend's acceptance list — not by the tap that registered them, so it
-  /// survives a restart and flips the moment an admin accepts.
-  final bool awaitingProgramApproval;
+  /// True when the viewer holds a registration but has not yet been accepted.
+  /// Driven by `myAcceptedProgramIdsProvider` — the backend's acceptance
+  /// list — not by the tap that registered them, so it survives a restart
+  /// and flips the moment an organizer accepts them. Applies to a program
+  /// and to a one-time event whose creator required approval.
+  final bool awaitingAcceptance;
   final VoidCallback onRegister;
   final VoidCallback onScanToCheckIn;
   final VoidCallback onViewSessions;
@@ -692,14 +689,15 @@ class _CtaSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Applied, not yet taken on. Shown for a program and for a one-time
+    // event that requires approval, so the student sees the request landed
+    // rather than a check-in button — and can't send a second registration.
+    if (event.registrationStatus != EventRegistrationStatus.notRegistered &&
+        awaitingAcceptance) {
+      return _PendingApprovalStatus(label: l10n.programPendingApprovalStatus);
+    }
     if (_isProgram &&
         event.registrationStatus != EventRegistrationStatus.notRegistered) {
-      // Applied, not yet taken on. Shown instead of the normal program CTA so
-      // the student sees their request landed rather than an unchanged
-      // Register button — and can't send a second one.
-      if (awaitingProgramApproval) {
-        return _PendingApprovalStatus(label: l10n.programPendingApprovalStatus);
-      }
       return _programCta();
     }
     switch (event.registrationStatus) {

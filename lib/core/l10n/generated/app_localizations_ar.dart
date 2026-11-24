@@ -705,6 +705,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get eventTypeProgram => 'برنامج';
 
   @override
+  String get eventFormAcceptanceLabel => 'قبول الطلاب';
+
+  @override
+  String get eventFormAcceptanceAuto => 'قبول تلقائي';
+
+  @override
+  String get eventFormAcceptanceApproval => 'يتطلب موافقة';
+
+  @override
+  String get eventFormAcceptanceHintAuto => 'يُقبل الطلاب فور تسجيلهم.';
+
+  @override
+  String get eventFormAcceptanceHintApproval =>
+      'يسجّل الطلاب أولاً، ثم تختار من يُقبل.';
+
+  @override
   String get eventFiltersButton => 'الفلاتر';
 
   @override
@@ -902,6 +918,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get eventScanErrorNotRegistered =>
       'يجب عليك التسجيل في هذه الفعالية قبل المسح.';
+
+  @override
+  String get eventScanErrorNotAccepted =>
+      'أنت مسجّل، لكن هذه الفعالية تتطلب موافقة قبل تسجيل الحضور.';
 
   @override
   String get eventScanErrorInvalid => 'رمز QR غير صالح.';

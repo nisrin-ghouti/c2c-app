@@ -124,6 +124,7 @@ class _ConfirmByStudentIdSheetState
       _error = switch (result.status) {
         EventScanStatus.alreadyScanned => l10n.eventScanErrorAlreadyScanned,
         EventScanStatus.notRegistered => l10n.eventScanErrorNotRegistered,
+        EventScanStatus.notAccepted => l10n.eventScanErrorNotAccepted,
         EventScanStatus.scanningClosed => l10n.eventScanningClosedMessage,
         EventScanStatus.expired => l10n.eventScanErrorExpired,
         _ => l10n.eventScanErrorInvalid,

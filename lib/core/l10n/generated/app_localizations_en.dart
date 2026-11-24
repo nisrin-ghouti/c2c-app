@@ -716,6 +716,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTypeProgram => 'Program';
 
   @override
+  String get eventFormAcceptanceLabel => 'Student acceptance';
+
+  @override
+  String get eventFormAcceptanceAuto => 'Auto-accept';
+
+  @override
+  String get eventFormAcceptanceApproval => 'Requires approval';
+
+  @override
+  String get eventFormAcceptanceHintAuto =>
+      'Students who register are accepted immediately.';
+
+  @override
+  String get eventFormAcceptanceHintApproval =>
+      'Students register first. You choose who is accepted.';
+
+  @override
   String get eventFiltersButton => 'Filters';
 
   @override
@@ -916,6 +933,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get eventScanErrorNotRegistered =>
       'You need to register for this event before scanning.';
+
+  @override
+  String get eventScanErrorNotAccepted =>
+      'You\'re registered, but this event still needs approval before you can check in.';
 
   @override
   String get eventScanErrorInvalid => 'Invalid QR code.';
