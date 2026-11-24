@@ -157,14 +157,11 @@ class GuidedTapShowcase extends ConsumerWidget {
 /// it blocks the rest of the screen. Close sits at the top-left of the
 /// tooltip; Previous and Next stay on the bottom row.
 ///
-/// Narration-only steps (no [onTargetClick]) also block the highlighted
-/// target itself from receiving real taps while this exact step is active.
-/// showcaseview's own `disableDefaultTargetGestures: true` uses `IgnorePointer`
-/// and leaks taps to the real widget underneath; `false` uses a translucent
-/// gesture detector, which per Flutter's hit-testing rules *also* still lets
-/// the tap continue through. Neither actually blocks the real widget, so this
-/// wraps [child] in its own [AbsorbPointer] — driven by [ShowcaseView]'s
-/// start/complete callbacks — which does.
+/// A tap anywhere outside Close and Previous moves the guide forward: the
+/// dimmed page, the highlighted target, and the tooltip text. The highlighted
+/// control itself does not receive that tap. showcaseview's target detector
+/// still lets the pointer continue through, so [AbsorbPointer] — driven by
+/// [ShowcaseView]'s start/complete callbacks — blocks the real widget.
 class TourShowcase extends ConsumerStatefulWidget {
   const TourShowcase({
     super.key,
@@ -256,8 +253,11 @@ class _TourShowcaseState extends ConsumerState<TourShowcase> {
         overlayOpacity: 0.55,
         targetBorderRadius: BorderRadius.circular(16),
         disableMovingAnimation: reduceMotion,
-        disableBarrierInteraction: true,
-        disableDefaultTargetGestures: widget.onTargetClick == null,
+        // A tap on the dimmed page, or on the highlighted target, advances.
+        // The real control underneath stays blocked, so the tap cannot open
+        // another screen.
+        disableBarrierInteraction: false,
+        disableDefaultTargetGestures: false,
         onTargetClick: widget.onTargetClick,
         disposeOnTap: widget.onTargetClick == null ? null : widget.disposeOnTap,
         tooltipPosition: widget.tooltipPosition,
@@ -271,6 +271,7 @@ class _TourShowcaseState extends ConsumerState<TourShowcase> {
         title: widget.title,
         description: widget.description,
         onClose: () => closeMainTour(container),
+        onAdvance: () => ShowcaseView.get().next(force: true),
         previousLabel: widget.hidePrevious ? null : l10n.tutorialBackAction,
         nextLabel: widget.hideNext ? null : l10n.tutorialNextAction,
       ),
@@ -278,8 +279,8 @@ class _TourShowcaseState extends ConsumerState<TourShowcase> {
       overlayColor: AppColors.foreground,
       overlayOpacity: 0.55,
       disableMovingAnimation: reduceMotion,
-      disableBarrierInteraction: true,
-      disableDefaultTargetGestures: widget.onTargetClick == null,
+      disableBarrierInteraction: false,
+      disableDefaultTargetGestures: false,
       onTargetClick: widget.onTargetClick,
       disposeOnTap: widget.onTargetClick == null ? null : widget.disposeOnTap,
       tooltipPosition: widget.tooltipPosition,
@@ -295,6 +296,7 @@ class _TourTooltip extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onClose,
+    this.onAdvance,
     this.previousLabel,
     this.nextLabel,
     this.actionsAlignment = MainAxisAlignment.spaceBetween,
@@ -303,6 +305,10 @@ class _TourTooltip extends StatelessWidget {
   final String title;
   final String description;
   final VoidCallback onClose;
+
+  /// Tap on the card itself, outside Close / Previous / Next, moves the
+  /// guide forward. Those buttons keep their own gestures.
+  final VoidCallback? onAdvance;
   final String? previousLabel;
   final String? nextLabel;
   final MainAxisAlignment actionsAlignment;
@@ -341,23 +347,32 @@ class _TourTooltip extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            title,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 15,
-              color: AppColors.foreground,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            description,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              fontSize: 13,
-              height: 1.4,
-              color: AppColors.mutedForeground,
+          GestureDetector(
+            onTap: onAdvance,
+            behavior: HitTestBehavior.opaque,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: AppColors.foreground,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    height: 1.4,
+                    color: AppColors.mutedForeground,
+                  ),
+                ),
+              ],
             ),
           ),
           if (previous != null || next != null) ...[
